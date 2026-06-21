@@ -71,7 +71,9 @@ export default function Footer() {
               <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-[#1A1714]">
                 <Image src="/logo.png" width={18} height={18} alt="Recipely logo" />
               </span>
-              <span className="text-lg font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
+              <span
+                className="text-lg font-semibold text-[#2B2420] dark:text-[#F4EDE4]"
+              >
                 Recipely
               </span>
             </Link>

@@ -23,15 +23,13 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      data-theme="dark"
-      className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
+      data-theme="light"
+      className={`${geistSans.variable} ${geistMono.variable} light h-full`}
     >
-      <body className="bg-[#FFF9F2] text-[#2B2420] dark:bg-[#1A1714] dark:text-[#F4EDE4]">
+      <body className="bg-[#FFF9F2]   dark:bg-[#1A1714] ">
         <Navbar />
-        <main>
-          {children}
-        </main>
-        <Footer/>
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
