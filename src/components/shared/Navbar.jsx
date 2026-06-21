@@ -80,13 +80,13 @@ export default function Navbar() {
           >
             Log in
           </Link>
-          <Button
-            as={Link}
-            href="/auth/register"
-            className="rounded-xl bg-[#E85D3D] px-5 text-sm font-medium text-white hover:bg-[#D14E30]"
-          >
-            Sign up
-          </Button>
+          <Link href="/auth/register">
+            <Button
+              className="w-full rounded-xl bg-[#E85D3D] text-sm font-medium text-white hover:bg-[#D14E30]"
+            >
+              Sign up
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -102,13 +102,13 @@ export default function Navbar() {
               >
                 Log in
               </Link>
-              <Button
-                as={Link}
-                href="/auth/register"
-                className="w-full rounded-xl bg-[#E85D3D] text-sm font-medium text-white hover:bg-[#D14E30]"
-              >
-                Sign up
-              </Button>
+              <Link href="/auth/register">
+                <Button
+                  className="w-full rounded-xl bg-[#E85D3D] text-sm font-medium text-white hover:bg-[#D14E30]"
+                >
+                  Sign up
+                </Button>
+              </Link>
             </li>
           </ul>
         </div>

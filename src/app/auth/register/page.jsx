@@ -15,6 +15,7 @@ import {
     Avatar,
 } from "@heroui/react";
 import { Envelope, Lock, Person, Eye, EyeSlash } from "@gravity-ui/icons";
+import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -27,14 +28,25 @@ export default function RegisterPage() {
         const formData = new FormData(e.currentTarget);
         const name = formData.get("name");
         const email = formData.get("email");
-        const imageUrl = formData.get("imageUrl");
+        const image = formData.get("imageUrl");
         const password = formData.get("password");
         const terms = formData.get("terms");
 
         // Connect auth parameters here
-        console.log({ name, email, imageUrl, password, terms });
+        console.log({ name, email, image, password, terms });
 
-        setTimeout(() => setIsSubmitting(false), 1200);
+        setTimeout(async () => {
+            const { data, error } = await authClient.signUp.email({
+                email, 
+                password, 
+                name, 
+                image, 
+                callbackURL: "/" 
+            })
+            console.log(data,error);
+            
+            setIsSubmitting(false)
+        }, 1200);
     };
 
     return (
@@ -63,31 +75,11 @@ export default function RegisterPage() {
                         </p>
                     </div>
 
-                    <div className="mt-6 flex items-center gap-3">
-                        <Avatar>
-                            <Avatar.Image
-                                alt="Blue"
-                                src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg"
-                            />
-                            <Avatar.Fallback>B</Avatar.Fallback>
-                        </Avatar>
-                        <div className="text-left">
-                            <p className="text-sm font-medium text-white">Anika Rahman</p>
-                            <p className="text-xs text-white/60">1,200+ recipes saved</p>
-                        </div>
-                    </div>
                 </div>
             </section>
             {/* LEFT — Form */}
             <section className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-20">
                 <div className="mx-auto w-full max-w-100">
-                    {/* Logo */}
-                    <Link href="/" className="mb-10 flex items-center gap-2">
-                        <Image src="/logo.png" alt="Recipely logo" height={32} width={32} />
-                        <span className="text-xl font-semibold tracking-tight text-[#2B2420] dark:text-[#F4EDE4]">
-                            Recipely
-                        </span>
-                    </Link>
 
                     {/* Heading */}
                     <h1 className="text-[2rem] leading-tight font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
@@ -107,7 +99,7 @@ export default function RegisterPage() {
                                     <Person width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
                                 </InputGroup.Prefix>
                                 <InputGroup.Input
-                                    placeholder="Chef Auguste"
+                                    placeholder="Enter your full name"
                                     className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
                                 />
                             </InputGroup>
@@ -192,6 +184,7 @@ export default function RegisterPage() {
                                     </Link>
                                 </Label>
                             </Checkbox.Content>
+                            <FieldError className="text-xs text-[#D64545]" />
                         </Checkbox>
 
                         {/* Submit Button */}
