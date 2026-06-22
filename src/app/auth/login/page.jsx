@@ -12,36 +12,65 @@ import {
   Label,
   TextField,
   FieldError,
-  Avatar,
 } from "@heroui/react";
 import { Envelope, Lock, Eye, EyeSlash } from "@gravity-ui/icons";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email");
     const password = formData.get("password");
+    const remember = formData.get("remember") === "on";
+    console.log(email,password,remember);
 
-    // TODO: connect to your auth flow (Better Auth / JWT) here
-    console.log({ email, password });
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: "/",
+        rememberMe: remember,
+      });
+      if (data) {
+        toast.success("Logged in successfully!");
+      }
+      if (error) {
+        toast.error("Login error:", error.message);
+      }
+    } catch (err) {
+      toast.error("An unexpected error occurred during login.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-    setTimeout(() => setIsSubmitting(false), 1200);
+  const handleGoogleLogin = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+    } catch (err) {
+      console.error("Google authentication error:", err);
+    }
   };
 
   return (
-    <main className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr_1fr] ">
+    <main className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr_1fr]">
       {/* LEFT — Form */}
       <section className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-20">
-        <div className="mx-auto w-full max-w-100">
-
+        <div className="mx-auto w-full max-w-md">
           {/* Heading */}
-          <h1 className="text-[2rem] leading-tight font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
+          <h1 className="text-[2rem] font-semibold leading-tight text-[#2B2420] dark:text-[#F4EDE4]">
             Welcome back
           </h1>
           <p className="mt-2 text-[15px] text-[#6B6155] dark:text-[#F4EDE4]">
@@ -58,7 +87,7 @@ export default function LoginPage() {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="you@example.com"
-                  className="border-[#EAE0D3]  text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -136,6 +165,7 @@ export default function LoginPage() {
           {/* Google login */}
           <Button
             type="button"
+            onClick={handleGoogleLogin}
             className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6]"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
@@ -169,7 +199,7 @@ export default function LoginPage() {
         </div>
       </section>
 
-      {/* RIGHT — Visual panel: full-bleed image background, centered overlay text */}
+      {/* RIGHT — Visual panel */}
       <section className="relative hidden overflow-hidden bg-[#2B2420] lg:block">
         <Image
           src="/cooking-image2.jpg"
@@ -179,8 +209,7 @@ export default function LoginPage() {
           className="object-cover opacity-90"
         />
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center bg-[#2B2420]/50">
-          {/* Exactly 3 sentences */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2B2420]/50 px-12 text-center">
           <div className="max-w-md text-[1.1rem] leading-relaxed text-white/90">
             <p className="mb-3 text-[1.75rem] font-medium leading-snug text-white">
               Every recipe worth keeping, in one place.
