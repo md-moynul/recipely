@@ -63,7 +63,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <Image src="/logo.png" alt="Recipely logo" height={28} width={28} />
-            <span className="text-lg font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
+            <span className="text-lg  font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
               Recipely
             </span>
           </Link>

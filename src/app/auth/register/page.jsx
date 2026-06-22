@@ -64,7 +64,7 @@ export default function RegisterPage() {
                 />
                 <div className="absolute inset-0 shadow-[inset_0_0_120px_60px_rgba(0,0,0,0.55)]" />
 
-                <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center">
+                 <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center bg-[#2B2420]/50">
                     <div className="max-w-md text-[1.1rem] leading-relaxed text-white/90">
                         <p className="mb-3 text-[1.65rem] font-medium leading-snug text-white">
                             Every recipe worth keeping, in one place.
@@ -174,7 +174,7 @@ export default function RegisterPage() {
                         {/* Terms Checkbox */}
                         <Checkbox name="terms" isRequired className="mt-1">
                             <Checkbox.Content>
-                                <Checkbox.Control className="border-[#EAE0D3] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
+                                <Checkbox.Control className="border border-[#EAE0D3] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
                                     <Checkbox.Indicator />
                                 </Checkbox.Control>
                                 <Label className="text-sm text-[#6B6155] dark:text-[#F4EDE4]">

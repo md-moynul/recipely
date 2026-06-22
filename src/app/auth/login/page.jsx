@@ -178,9 +178,8 @@ export default function LoginPage() {
           priority
           className="object-cover opacity-90"
         />
-        <div className="absolute inset-0 shadow-[inset_0_0_120px_60px_rgba(0,0,0,0.55)]" />
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-12 text-center bg-[#2B2420]/50">
           {/* Exactly 3 sentences */}
           <div className="max-w-md text-[1.1rem] leading-relaxed text-white/90">
             <p className="mb-3 text-[1.75rem] font-medium leading-snug text-white">
