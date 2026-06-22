@@ -11,7 +11,7 @@ export default function HeroSection() {
     // Set the playback speed to 0.75x once the component mounts
     useEffect(() => {
         if (videoRef.current) {
-            videoRef.current.playbackRate = 0.25;
+            videoRef.current.playbackRate = 0.65;
         }
     }, []);
 
