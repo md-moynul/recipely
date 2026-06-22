@@ -1,0 +1,323 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  InputGroup,
+  Label,
+  ListBox,
+  Select,
+  TextField,
+  TextArea,
+  FieldError,
+} from "@heroui/react";
+import { Plus, TrashBin, FolderArrowUp, Clock } from "@gravity-ui/icons";
+
+const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Appetizer", "Beverage"];
+const CUISINES = ["Bengali", "Indian", "Italian", "Chinese", "Mexican", "Thai", "Continental"];
+const DIFFICULTIES = ["Easy", "Medium", "Hard"];
+const fieldBg = "bg-[#FFF9F2] dark:bg-[#1A1714]";
+
+export default function AddRecipePage() {
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
+  const [ingredients, setIngredients] = useState([""]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+    setUploadedImageUrl(null);
+  };
+
+  const uploadToImgbb = async () => {
+    if (!imageFile) return null;
+    setIsUploading(true);
+    setError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (!data.success) throw new Error("Image upload failed");
+
+      setUploadedImageUrl(data.data.url);
+      return data.data.url;
+    } catch (err) {
+      setError("Image upload failed. Please try again.");
+      return null;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const addIngredientField = () => {
+    setIngredients((prev) => [...prev, ""]);
+  };
+
+  const removeIngredientField = (index) => {
+    setIngredients((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateIngredient = (index, value) => {
+    setIngredients((prev) => prev.map((item, i) => (i === index ? value : item)));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      let imageUrl = uploadedImageUrl;
+      if (imageFile && !imageUrl) {
+        imageUrl = await uploadToImgbb();
+        if (!imageUrl) {
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      const formData = new FormData(e.currentTarget);
+      const payload = {
+        recipeName: formData.get("recipeName"),
+        recipeImage: imageUrl,
+        category: formData.get("category"),
+        cuisineType: formData.get("cuisineType"),
+        difficultyLevel: formData.get("difficultyLevel"),
+        preparationTime: formData.get("preparationTime"),
+        ingredients: ingredients.filter((i) => i.trim() !== ""),
+        instructions: formData.get("instructions"),
+      };
+
+      // TODO: send `payload` to your API route (e.g. POST /api/recipes)
+      console.log(payload);
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="mx-auto w-full max-w-5xl px-6 py-10">
+      <Card className="w-full p-6 sm:p-8">
+        <Card.Header>
+          <Card.Title className="text-2xl font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
+            Add a Recipe
+          </Card.Title>
+          <Card.Description className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+            Share something worth cooking again.
+          </Card.Description>
+        </Card.Header>
+
+        <Card.Content>
+          <Form className="mt-2 flex flex-col gap-6" onSubmit={handleSubmit}>
+            {/* Recipe Name */}
+            <TextField name="recipeName" isRequired className="flex flex-col gap-1.5">
+              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                Recipe Name
+              </Label>
+              <Input
+                placeholder="e.g. Spicy Beef Bhuna"
+                className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20 dark:border-[#3A332A] dark:text-[#F4EDE4]`}
+              />
+              <FieldError className="text-xs text-[#D64545]" />
+            </TextField>
+
+            {/* Image Upload */}
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                Recipe Image
+              </Label>
+
+              <label
+                htmlFor="recipe-image"
+                className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#EAE0D3] ${fieldBg} p-6 text-center transition-colors hover:border-[#E85D3D] dark:border-[#3A332A]`}
+              >
+                {imagePreview ? (
+                  <div className="relative h-40 w-full overflow-hidden rounded-lg">
+                    <Image src={imagePreview} alt="Recipe preview" fill className="object-cover" />
+                  </div>
+                ) : (
+                  <>
+                    <FolderArrowUp width={22} height={22} className="text-[#9C9388]" />
+                    <span className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+                      Click to upload an image
+                    </span>
+                    <span className="text-xs text-[#9C9388]">PNG or JPG, up to 5MB</span>
+                  </>
+                )}
+              </label>
+              <input
+                id="recipe-image"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+              {isUploading && (
+                <p className="text-xs text-[#9C9388]">Uploading image…</p>
+              )}
+            </div>
+
+            {/* Category + Cuisine */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <Select name="category" isRequired placeholder="Select category" className="flex flex-col gap-1.5">
+                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                  Category
+                </Label>
+                <Select.Trigger className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] dark:border-[#3A332A] dark:text-[#F4EDE4]`}>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {CATEGORIES.map((cat) => (
+                      <ListBox.Item key={cat} id={cat}>
+                        <Label>{cat}</Label>
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+
+              <Select name="cuisineType" isRequired placeholder="Select cuisine" className="flex flex-col gap-1.5">
+                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                  Cuisine Type
+                </Label>
+                <Select.Trigger className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] dark:border-[#3A332A] dark:text-[#F4EDE4]`}>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {CUISINES.map((cuisine) => (
+                      <ListBox.Item key={cuisine} id={cuisine}>
+                        <Label>{cuisine}</Label>
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+            </div>
+
+            {/* Difficulty + Prep time */}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              <Select name="difficultyLevel" isRequired placeholder="Select difficulty" className="flex flex-col gap-1.5">
+                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                  Difficulty Level
+                </Label>
+                <Select.Trigger className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] dark:border-[#3A332A] dark:text-[#F4EDE4]`}>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {DIFFICULTIES.map((level) => (
+                      <ListBox.Item key={level} id={level}>
+                        <Label>{level}</Label>
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+
+              <TextField name="preparationTime" isRequired className="flex flex-col gap-1.5">
+                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                  Preparation Time
+                </Label>
+                <InputGroup>
+                  <InputGroup.Prefix className={`${fieldBg} text-[#9C9388]`}>
+                    <Clock width={16} height={16} />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input
+                    placeholder="e.g. 30 mins"
+                    className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] dark:border-[#3A332A] dark:text-[#F4EDE4]`}
+                  />
+                </InputGroup>
+                <FieldError className="text-xs text-[#D64545]" />
+              </TextField>
+            </div>
+
+            {/* Ingredients - dynamic list */}
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                Ingredients
+              </Label>
+
+              <div className="flex flex-col gap-2.5">
+                {ingredients.map((ingredient, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Input
+                      value={ingredient}
+                      onChange={(e) => updateIngredient(index, e.target.value)}
+                      placeholder={`Ingredient ${index + 1}, e.g. 2 cups rice`}
+                      className={`flex-1 rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20 dark:border-[#3A332A] dark:text-[#F4EDE4]`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeIngredientField(index)}
+                      disabled={ingredients.length === 1}
+                      aria-label="Remove ingredient"
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-[#252019]"
+                    >
+                      <TrashBin width={16} height={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={addIngredientField}
+                className="mt-1 flex items-center gap-1.5 self-start rounded-lg px-2 py-1 text-sm font-medium text-[#E85D3D] transition-colors hover:bg-[#FBF1E6] dark:hover:bg-[#252019]"
+              >
+                <Plus width={16} height={16} />
+                Add ingredient
+              </button>
+            </div>
+
+            {/* Instructions */}
+            <TextField name="instructions" isRequired className="flex flex-col gap-1.5">
+              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                Instructions
+              </Label>
+              <TextArea
+                rows={6}
+                placeholder="Write the steps to make this recipe..."
+                className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20 dark:border-[#3A332A] dark:text-[#F4EDE4]`}
+              />
+              <FieldError className="text-xs text-[#D64545]" />
+            </TextField>
+
+            {error && <p className="text-sm text-[#D64545]">{error}</p>}
+
+            <Button
+              type="submit"
+              isDisabled={isSubmitting || isUploading}
+              className="mt-2 w-full rounded-xl bg-[#E85D3D] py-3 text-[15px] font-medium text-white shadow-sm transition-colors hover:bg-[#D14E30] disabled:opacity-60"
+            >
+              {isSubmitting ? "Publishing…" : "Publish Recipe"}
+            </Button>
+          </Form>
+        </Card.Content>
+      </Card>
+    </div>
+  );
+}

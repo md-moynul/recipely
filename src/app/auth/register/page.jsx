@@ -41,8 +41,6 @@ export default function RegisterPage() {
         password,
         name,
         image,
-        role: "user",
-        plan: "free",
         callbackURL: "/",
       });
       if (error) {
