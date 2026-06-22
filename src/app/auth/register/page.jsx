@@ -16,6 +16,7 @@ import {
 import { Envelope, Lock, Person, Eye, EyeSlash } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function RegisterPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -40,18 +41,20 @@ export default function RegisterPage() {
         password,
         name,
         image,
+        role: "user",
+        plan: "free",
         callbackURL: "/",
       });
-
       if (error) {
-        console.error("Registration error:", error.message);
+        toast.error("An unexpected error occurred during registration.");
       } 
       if(data) {
-        console.log("Registration successful:", data);
+        toast.success("Registration successful!");
         router.push("/"); // Redirect to home page after successful registration
       }
     } catch (err) {
       console.error("Unexpected error during registration:", err);
+      toast.error("An unexpected error occurred during registration.");
     } finally {
       setIsSubmitting(false);
     }

@@ -67,12 +67,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-orange-50 text-[#1A1714]">
+            <Link href="/" className="flex items-center gap-1">
                 <Image src="/logo.png" width={18} height={18} alt="Recipely logo" />
-              </span>
               <span
-                className="text-lg font-semibold text-[#2B2420] dark:text-[#F4EDE4]"
+                className="text-xl font-bold text-[#E85D3D]"
               >
                 Recipely
               </span>

@@ -11,12 +11,12 @@ export default function HeroSection() {
     // Set the playback speed to 0.75x once the component mounts
     useEffect(() => {
         if (videoRef.current) {
-            videoRef.current.playbackRate = 0.65;
+            videoRef.current.playbackRate = 0.5;
         }
     }, []);
 
     return (
-        <header className="relative flex h-screen w-full items-center justify-center overflow-hidden">
+        <header className="relative flex h-[90vh] w-full items-center justify-center overflow-hidden">
             {/* Background video */}
             <video
                 ref={videoRef}
