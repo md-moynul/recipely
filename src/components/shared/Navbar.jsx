@@ -32,8 +32,7 @@ export default function Navbar() {
 
   const baseNavLinks = [
     { label: "Home", href: "/" },
-    { label: "Browse Recipes", href: "/recipes" },
-    { label: "Premium", href: "/premium" },
+    { label: "Browse Recipes", href: "/all-recipes" },
   ];
 
   const navLinks = [

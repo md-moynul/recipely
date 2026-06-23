@@ -6,3 +6,6 @@ export const getRecipes = async (authorId) => {
 export const getRecipeByRecipeId = async (recipeId) => {
     return await serverFetch(`/api/my-recipe/${recipeId}`);
 }
+export const getAllRecipes = async () => {
+    return await serverFetch('/api/recipes');
+}
