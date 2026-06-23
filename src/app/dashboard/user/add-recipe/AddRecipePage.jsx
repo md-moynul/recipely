@@ -17,6 +17,7 @@ import {
 } from "@heroui/react";
 import { Plus, TrashBin, FolderArrowUp, Clock } from "@gravity-ui/icons";
 import { addRecipe } from "@/lib/action/recipe";
+import { toast } from "react-toastify";
 
 const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Appetizer", "Beverage"];
 const CUISINES = ["Bengali", "Indian", "Italian", "Chinese", "Mexican", "Thai", "Continental"];
@@ -100,7 +101,7 @@ export default function AddRecipePage({ user }) {
       }
 
       const formData = new FormData(e.currentTarget);
-      const payload = {
+      let payload = {
         recipeName: formData.get("recipeName"),
         recipeImage: imageUrl,
         category: formData.get("category"),
@@ -119,7 +120,11 @@ export default function AddRecipePage({ user }) {
       // TODO: send `payload` to your API route (e.g. POST /api/recipes)
       console.log(payload);
       const result = await addRecipe(payload);
-      console.log(result);
+      if(result.insertedId) {
+        toast.success("Recipe added successfully!");
+        form.reset();
+        payload={}
+      }
       
     } catch (err) {
       setError("Something went wrong. Please try again.");

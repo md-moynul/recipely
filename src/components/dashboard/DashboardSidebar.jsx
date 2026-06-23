@@ -46,7 +46,7 @@ export default function DashboardSidebar({ isPremium }) {
     {
       icon: Person,
       label: "Profile",
-      href: "/dashboard/user/profile",
+      href: "/dashboard/profile",
     },
   ];
 

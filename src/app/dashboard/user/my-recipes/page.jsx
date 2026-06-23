@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { getRecipes } from "@/lib/api/recipe";
 import { getServerSession } from "@/lib/core/session";
-import RecipeCard from "./RecipeCard";
-
+import MyRecipesTable from "./MyRecipesTable";
 
 const MyRecipePage = async () => {
   const user = await getServerSession();
@@ -31,28 +30,9 @@ const MyRecipePage = async () => {
         </Link>
       </div>
 
-      {recipes.length === 0 ? (
-        <div className="mt-10 rounded-2xl border border-dashed border-[#EAE0D3] p-12 text-center dark:border-[#3A332A]">
-          <p className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-            You haven&apos;t added any recipes yet
-          </p>
-          <p className="mt-1 text-sm text-[#9C9388]">
-            Start sharing something worth cooking again.
-          </p>
-          <Link
-            href="/dashboard/user/add-recipe"
-            className="mt-5 inline-block rounded-xl bg-[#E85D3D] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
-          >
-            Add your first recipe
-          </Link>
-        </div>
-      ) : (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe._id ?? recipe.id} recipe={recipe} />
-          ))}
-        </div>
-      )}
+      {/* `recipes` is plain serializable data (array of objects) — safe to
+          pass from this Server Component into the client Table component. */}
+      <MyRecipesTable recipes={recipes} />
     </div>
   );
 };
