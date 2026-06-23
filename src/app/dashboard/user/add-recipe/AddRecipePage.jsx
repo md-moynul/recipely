@@ -116,8 +116,6 @@ export default function AddRecipePage({ user }) {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-
-      // TODO: send `payload` to your API route (e.g. POST /api/recipes)
       console.log(payload);
       const result = await addRecipe(payload);
       if(result.insertedId) {

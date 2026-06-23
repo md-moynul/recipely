@@ -91,7 +91,7 @@ export default function MyRecipesTable({ recipes }) {
                         </Link>
 
                         <Link
-                          href={`/dashboard/user/my-recipes/${id}/edit`}
+                          href={`/dashboard/user/my-recipes/${id}`}
                           aria-label="Edit recipe"
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-[#6B6155] transition-colors hover:bg-[#FBF1E6] hover:text-[#2B2420] dark:text-[#B8AFA2] dark:hover:bg-[#1A1714] dark:hover:text-[#F4EDE4]"
                         >
