@@ -1,10 +1,12 @@
 import React from 'react';
 import AddRecipePage from './AddRecipePage';
+import { getServerSession } from '@/lib/core/session';
 
-const page = () => {
+const page = async () => {
+    const user =await getServerSession();
     return (
         <div>
-            <AddRecipePage/>
+            <AddRecipePage user={user} />
         </div>
     );
 };

@@ -16,13 +16,16 @@ import {
   FieldError,
 } from "@heroui/react";
 import { Plus, TrashBin, FolderArrowUp, Clock } from "@gravity-ui/icons";
+import { addRecipe } from "@/lib/action/recipe";
 
 const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Appetizer", "Beverage"];
 const CUISINES = ["Bengali", "Indian", "Italian", "Chinese", "Mexican", "Thai", "Continental"];
 const DIFFICULTIES = ["Easy", "Medium", "Hard"];
-const fieldBg = "bg-[#FFF9F2] dark:bg-[#1A1714]";
 
-export default function AddRecipePage() {
+const fieldBg = "bg-[#FFF9F2]";
+const fieldClass = `rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20`;
+
+export default function AddRecipePage({ user }) {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -48,10 +51,13 @@ export default function AddRecipePage() {
       const formData = new FormData();
       formData.append("image", imageFile);
 
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`, {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       const data = await res.json();
 
       if (!data.success) throw new Error("Image upload failed");
@@ -103,10 +109,18 @@ export default function AddRecipePage() {
         preparationTime: formData.get("preparationTime"),
         ingredients: ingredients.filter((i) => i.trim() !== ""),
         instructions: formData.get("instructions"),
+        authorId: user?.id,
+        authorName: user?.name,
+        authorImage: user?.image,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       // TODO: send `payload` to your API route (e.g. POST /api/recipes)
       console.log(payload);
+      const result = await addRecipe(payload);
+      console.log(result);
+      
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -116,12 +130,12 @@ export default function AddRecipePage() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-10">
-      <Card className="w-full p-6 sm:p-8">
+      <Card className="w-full border border-[#EAE0D3] bg-white p-6 sm:p-8">
         <Card.Header>
-          <Card.Title className="text-2xl font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
+          <Card.Title className="text-2xl font-semibold text-[#2B2420]">
             Add a Recipe
           </Card.Title>
-          <Card.Description className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+          <Card.Description className="text-sm text-[#6B6155]">
             Share something worth cooking again.
           </Card.Description>
         </Card.Header>
@@ -130,25 +144,18 @@ export default function AddRecipePage() {
           <Form className="mt-2 flex flex-col gap-6" onSubmit={handleSubmit}>
             {/* Recipe Name */}
             <TextField name="recipeName" isRequired className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                Recipe Name
-              </Label>
-              <Input
-                placeholder="e.g. Spicy Beef Bhuna"
-                className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20 dark:border-[#3A332A] dark:text-[#F4EDE4]`}
-              />
+              <Label className="text-sm font-medium text-[#2B2420]">Recipe Name</Label>
+              <Input placeholder="e.g. Spicy Beef Bhuna" className={fieldClass} />
               <FieldError className="text-xs text-[#D64545]" />
             </TextField>
 
             {/* Image Upload */}
             <div className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                Recipe Image
-              </Label>
+              <Label className="text-sm font-medium text-[#2B2420]">Recipe Image</Label>
 
               <label
                 htmlFor="recipe-image"
-                className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#EAE0D3] ${fieldBg} p-6 text-center transition-colors hover:border-[#E85D3D] dark:border-[#3A332A]`}
+                className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#EAE0D3] ${fieldBg} p-6 text-center transition-colors hover:border-[#E85D3D]`}
               >
                 {imagePreview ? (
                   <div className="relative h-40 w-full overflow-hidden rounded-lg">
@@ -157,9 +164,7 @@ export default function AddRecipePage() {
                 ) : (
                   <>
                     <FolderArrowUp width={22} height={22} className="text-[#9C9388]" />
-                    <span className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
-                      Click to upload an image
-                    </span>
+                    <span className="text-sm text-[#6B6155]">Click to upload an image</span>
                     <span className="text-xs text-[#9C9388]">PNG or JPG, up to 5MB</span>
                   </>
                 )}
@@ -171,18 +176,14 @@ export default function AddRecipePage() {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              {isUploading && (
-                <p className="text-xs text-[#9C9388]">Uploading image…</p>
-              )}
+              {isUploading && <p className="text-xs text-[#9C9388]">Uploading image…</p>}
             </div>
 
             {/* Category + Cuisine */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Select name="category" isRequired placeholder="Select category" className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                  Category
-                </Label>
-                <Select.Trigger className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] dark:border-[#3A332A] dark:text-[#F4EDE4]`}>
+                <Label className="text-sm font-medium text-[#2B2420]">Category</Label>
+                <Select.Trigger className={fieldClass}>
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
@@ -198,10 +199,8 @@ export default function AddRecipePage() {
               </Select>
 
               <Select name="cuisineType" isRequired placeholder="Select cuisine" className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                  Cuisine Type
-                </Label>
-                <Select.Trigger className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] dark:border-[#3A332A] dark:text-[#F4EDE4]`}>
+                <Label className="text-sm font-medium text-[#2B2420]">Cuisine Type</Label>
+                <Select.Trigger className={fieldClass}>
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
@@ -220,10 +219,8 @@ export default function AddRecipePage() {
             {/* Difficulty + Prep time */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Select name="difficultyLevel" isRequired placeholder="Select difficulty" className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                  Difficulty Level
-                </Label>
-                <Select.Trigger className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] dark:border-[#3A332A] dark:text-[#F4EDE4]`}>
+                <Label className="text-sm font-medium text-[#2B2420]">Difficulty Level</Label>
+                <Select.Trigger className={fieldClass}>
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
@@ -239,17 +236,12 @@ export default function AddRecipePage() {
               </Select>
 
               <TextField name="preparationTime" isRequired className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                  Preparation Time
-                </Label>
+                <Label className="text-sm font-medium text-[#2B2420]">Preparation Time</Label>
                 <InputGroup>
                   <InputGroup.Prefix className={`${fieldBg} text-[#9C9388]`}>
                     <Clock width={16} height={16} />
                   </InputGroup.Prefix>
-                  <InputGroup.Input
-                    placeholder="e.g. 30 mins"
-                    className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] dark:border-[#3A332A] dark:text-[#F4EDE4]`}
-                  />
+                  <InputGroup.Input placeholder="e.g. 30 mins" className={fieldClass} />
                 </InputGroup>
                 <FieldError className="text-xs text-[#D64545]" />
               </TextField>
@@ -257,9 +249,7 @@ export default function AddRecipePage() {
 
             {/* Ingredients - dynamic list */}
             <div className="flex flex-col gap-2">
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                Ingredients
-              </Label>
+              <Label className="text-sm font-medium text-[#2B2420]">Ingredients</Label>
 
               <div className="flex flex-col gap-2.5">
                 {ingredients.map((ingredient, index) => (
@@ -268,14 +258,14 @@ export default function AddRecipePage() {
                       value={ingredient}
                       onChange={(e) => updateIngredient(index, e.target.value)}
                       placeholder={`Ingredient ${index + 1}, e.g. 2 cups rice`}
-                      className={`flex-1 rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20 dark:border-[#3A332A] dark:text-[#F4EDE4]`}
+                      className={`flex-1 ${fieldClass}`}
                     />
                     <button
                       type="button"
                       onClick={() => removeIngredientField(index)}
                       disabled={ingredients.length === 1}
                       aria-label="Remove ingredient"
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-[#252019]"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#EAE0D3] text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       <TrashBin width={16} height={16} />
                     </button>
@@ -286,7 +276,7 @@ export default function AddRecipePage() {
               <button
                 type="button"
                 onClick={addIngredientField}
-                className="mt-1 flex items-center gap-1.5 self-start rounded-lg px-2 py-1 text-sm font-medium text-[#E85D3D] transition-colors hover:bg-[#FBF1E6] dark:hover:bg-[#252019]"
+                className="mt-1 flex items-center gap-1.5 self-start rounded-lg px-2 py-1 text-sm font-medium text-[#E85D3D] transition-colors hover:bg-[#FBF1E6]"
               >
                 <Plus width={16} height={16} />
                 Add ingredient
@@ -295,13 +285,11 @@ export default function AddRecipePage() {
 
             {/* Instructions */}
             <TextField name="instructions" isRequired className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                Instructions
-              </Label>
+              <Label className="text-sm font-medium text-[#2B2420]">Instructions</Label>
               <TextArea
                 rows={6}
                 placeholder="Write the steps to make this recipe..."
-                className={`rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20 dark:border-[#3A332A] dark:text-[#F4EDE4]`}
+                className={fieldClass}
               />
               <FieldError className="text-xs text-[#D64545]" />
             </TextField>

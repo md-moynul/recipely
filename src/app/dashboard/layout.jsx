@@ -3,7 +3,7 @@ import React from 'react';
 
 const DashboardLayout = ({ children }) => {
     return (
-        <div className="flex min-h-screen justify-start">
+        <div className="flex min-h-screen flex-col md:flex-row">
             <DashboardSidebar isPremium={true} />
             <main className='flex-1'>
                 {children}

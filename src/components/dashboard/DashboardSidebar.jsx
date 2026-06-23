@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -16,10 +16,6 @@ import { Button, Drawer } from "@heroui/react";
 
 export default function DashboardSidebar({ isPremium }) {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-
-  const onOpen = () => setIsOpen(true);
-  const onClose = () => setIsOpen(false);
 
   const navItems = [
     {
@@ -54,14 +50,16 @@ export default function DashboardSidebar({ isPremium }) {
     },
   ];
 
-  const navLinks = (
+  // `onLinkClick` lets us close the drawer on mobile when a nav item is tapped.
+  // It's passed the drawer's own close callback from inside Drawer.Dialog's render-prop.
+  const renderNavLinks = (onLinkClick) => (
     <nav className="flex flex-col gap-1.5 w-full">
       {navItems.map((item) => {
         const IconComponent = item.icon;
         const isActive = pathname === item.href;
 
         return (
-          <Link key={item.href} href={item.href} onClick={onClose}>
+          <Link key={item.href} href={item.href} onClick={onLinkClick}>
             <button
               type="button"
               className={`w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all text-left relative group ${
@@ -91,19 +89,78 @@ export default function DashboardSidebar({ isPremium }) {
     </nav>
   );
 
+  const premiumCard = !isPremium ? (
+    <div className="mt-auto rounded-2xl border border-[#F4A340]/40 p-4">
+      <p className="text-sm font-medium text-[#B5781F]">Go Premium</p>
+      <p className="mt-1 text-xs text-[#6B6155] dark:text-[#B8AFA2]">
+        Unlock unlimited recipes and a premium badge.
+      </p>
+      <Link href="/dashboard/user/premium">
+        <Button className="mt-4 w-full rounded-xl bg-[#E85D3D] text-white hover:bg-[#D14E30]" size="sm">
+          <Plus className="w-4 h-4" />
+          Upgrade
+        </Button>
+      </Link>
+    </div>
+  ) : (
+    <div className="mt-auto rounded-2xl border border-[#EAE0D3] p-4 dark:border-[#3A332A]">
+      <p className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Ready to cook?</p>
+      <p className="mt-1 text-xs text-[#9C9388] dark:text-[#7A7266]">
+        Share a new recipe with the community.
+      </p>
+      <Link href="/dashboard/user/add-recipe">
+        <Button className="mt-4 w-full rounded-xl bg-[#E85D3D] text-white hover:bg-[#D14E30]" size="sm">
+          <Plus className="w-4 h-4" />
+          Add Recipe
+        </Button>
+      </Link>
+    </div>
+  );
+
   return (
     <div>
-      {/* Mobile Header */}
-      <div className="lg:hidden p-4 border-b border-[#EAE0D3] flex items-center justify-between dark:border-[#3A332A]">
-        <Button
-          onPress={onOpen}
-          variant="flat"
-          size="sm"
-          className="border border-[#EAE0D3] text-[#2B2420] gap-2 rounded-xl dark:border-[#3A332A] dark:text-[#F4EDE4]"
-        >
-          <LayoutSideContentLeft className="w-4 h-4" />
-          Menu
-        </Button>
+      {/* Mobile Header + Drawer
+          IMPORTANT (HeroUI v3): the trigger button must be the FIRST child of
+          <Drawer>, with <Drawer.Backdrop> as the second child. If the trigger
+          isn't the first child, v3's DialogTrigger wiring breaks and the
+          drawer never opens. */}
+      <div className="sticky top-0 z-40 lg:hidden p-4 border-b border-[#EAE0D3] flex items-center justify-between dark:border-[#3A332A]">
+        <Drawer>
+          <Button
+            variant="flat"
+            size="sm"
+            className="border border-[#EAE0D3] text-[#2B2420] gap-2 rounded-xl dark:border-[#3A332A] dark:text-[#F4EDE4]"
+          >
+            <LayoutSideContentLeft className="w-4 h-4" />
+            Menu
+          </Button>
+
+          <Drawer.Backdrop>
+            <Drawer.Content
+              placement="left"
+              className="fixed inset-y-0 left-0 z-50 h-screen w-72 max-w-72 overflow-y-auto border-r border-[#EAE0D3] dark:border-[#3A332A]"
+            >
+              <Drawer.Dialog className="text-[#2B2420] p-5 dark:text-[#F4EDE4]">
+                {({ close }) => (
+                  <>
+                    <Drawer.Header className="p-0 mb-6">
+                      <div>
+                        <h2 className="text-2xl font-semibold">Recipely</h2>
+                        <p className="text-sm text-[#9C9388] dark:text-[#7A7266]">
+                          Your Kitchen
+                        </p>
+                      </div>
+                    </Drawer.Header>
+
+                    <Drawer.Body className="p-0">
+                      {renderNavLinks(close)}
+                    </Drawer.Body>
+                  </>
+                )}
+              </Drawer.Dialog>
+            </Drawer.Content>
+          </Drawer.Backdrop>
+        </Drawer>
       </div>
 
       {/* Desktop Sidebar */}
@@ -117,65 +174,10 @@ export default function DashboardSidebar({ isPremium }) {
           </p>
         </div>
 
-        {navLinks}
+        {renderNavLinks()}
 
-        {!isPremium ? (
-          <div className="mt-auto rounded-2xl border border-[#F4A340]/40 p-4">
-            <p className="text-sm font-medium text-[#B5781F]">
-              Go Premium
-            </p>
-            <p className="mt-1 text-xs text-[#6B6155] dark:text-[#B8AFA2]">
-              Unlock unlimited recipes and a premium badge.
-            </p>
-            <Link href="/dashboard/user/premium">
-              <Button className="mt-4 w-full rounded-xl bg-[#E85D3D] text-white hover:bg-[#D14E30]" size="sm">
-                <Plus className="w-4 h-4" />
-                Upgrade
-              </Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="mt-auto rounded-2xl border border-[#EAE0D3] p-4 dark:border-[#3A332A]">
-            <p className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-              Ready to cook?
-            </p>
-            <p className="mt-1 text-xs text-[#9C9388] dark:text-[#7A7266]">
-              Share a new recipe with the community.
-            </p>
-            <Link href="/dashboard/user/add-recipe">
-              <Button className="mt-4 w-full rounded-xl bg-[#E85D3D] text-white hover:bg-[#D14E30]" size="sm">
-                <Plus className="w-4 h-4" />
-                Add Recipe
-              </Button>
-            </Link>
-          </div>
-        )}
+        {premiumCard}
       </aside>
-
-      {/* Mobile Drawer */}
-      <Drawer
-        isOpen={isOpen}
-        onClose={onClose}
-        placement="left"
-        className="border-r border-[#EAE0D3] max-w-72 dark:border-[#3A332A]"
-      >
-        <Drawer.Content className="text-[#2B2420] p-5 dark:text-[#F4EDE4]">
-          {() => (
-            <>
-              <Drawer.Header className="p-0 mb-6">
-                <div>
-                  <h2 className="text-2xl font-semibold">Recipely</h2>
-                  <p className="text-sm text-[#9C9388] dark:text-[#7A7266]">
-                    Your Kitchen
-                  </p>
-                </div>
-              </Drawer.Header>
-
-              <Drawer.Body className="p-0">{navLinks}</Drawer.Body>
-            </>
-          )}
-        </Drawer.Content>
-      </Drawer>
     </div>
   );
 }
