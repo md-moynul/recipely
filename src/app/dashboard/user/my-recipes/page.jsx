@@ -12,7 +12,7 @@ const MyRecipePage = async () => {
   const recipes = Array.isArray(result) ? result : result?.recipes ?? [];
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-6 py-10">
+    <div className="mx-auto w-full container px-6 py-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-[#2B2420] dark:text-[#F4EDE4]">

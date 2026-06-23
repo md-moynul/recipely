@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   Button,
   Card,
@@ -27,6 +28,9 @@ const fieldBg = "bg-[#FFF9F2]";
 const fieldClass = `rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20`;
 
 export default function AddRecipePage({ user }) {
+  const router = useRouter();
+  const formRef = useRef(null); // Reference to pass a strict HTMLFormElement to FormData
+  
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -100,8 +104,10 @@ export default function AddRecipePage({ user }) {
         }
       }
 
-      const formData = new FormData(e.currentTarget);
-      let payload = {
+      if (!formRef.current) return;
+      const formData = new FormData(formRef.current);
+      
+      const payload = {
         recipeName: formData.get("recipeName"),
         recipeImage: imageUrl,
         category: formData.get("category"),
@@ -111,21 +117,35 @@ export default function AddRecipePage({ user }) {
         ingredients: ingredients.filter((i) => i.trim() !== ""),
         instructions: formData.get("instructions"),
         authorId: user?.id,
+        likes: 0,
+        isFeatured: false,
+        status: "published",
         authorName: user?.name,
         authorImage: user?.image,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      console.log(payload);
+
       const result = await addRecipe(payload);
-      if(result.insertedId) {
-        toast.success("Recipe added successfully!");
-        form.reset();
-        payload={}
-      }
       
+      if (result?.insertedId) {
+        toast.success(`${payload.recipeName} added successfully!`);
+        
+        // Reset inputs on absolute HTML element reference
+        formRef.current.reset();
+        setImageFile(null);
+        setImagePreview(null);
+        setUploadedImageUrl(null);
+        setIngredients([""]);
+
+        setTimeout(() => {
+          router.push("/dashboard/user/my-recipes");
+          router.refresh();
+        }, 100);
+      }
     } catch (err) {
       setError("Something went wrong. Please try again.");
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -144,7 +164,7 @@ export default function AddRecipePage({ user }) {
         </Card.Header>
 
         <Card.Content>
-          <Form className="mt-2 flex flex-col gap-6" onSubmit={handleSubmit}>
+          <Form ref={formRef} className="mt-2 flex flex-col gap-6" onSubmit={handleSubmit}>
             {/* Recipe Name */}
             <TextField name="recipeName" isRequired className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-[#2B2420]">Recipe Name</Label>
