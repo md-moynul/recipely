@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, GraduationCap } from "@gravity-ui/icons";
+import { Clock, GraduationCap, Heart, HeartFill } from "@gravity-ui/icons";
 
 export default function NormalRecipes({ recipe }) {
   const id = recipe._id ?? recipe.id;
@@ -26,6 +26,12 @@ export default function NormalRecipes({ recipe }) {
             {recipe.category}
           </span>
         ) : null}
+
+        {recipe.price ? (
+          <span className="absolute right-3 top-3 rounded-full bg-[#E85D3D] px-2.5 py-1 text-xs font-semibold text-white">
+            ${recipe.price}
+          </span>
+        ) : null}
       </div>
 
       <div className="p-4">
@@ -34,20 +40,29 @@ export default function NormalRecipes({ recipe }) {
         </h3>
 
         {recipe.authorName ? (
-          <div className="mt-2 flex items-center gap-2">
-            <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full bg-[#FBF1E6] dark:bg-[#1A1714]">
-              {recipe.authorImage ? (
-                <Image
-                  src={recipe.authorImage}
-                  alt={recipe.authorName}
-                  fill
-                  className="object-cover"
-                />
-              ) : null}
+          <div className="mt-2 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full bg-[#FBF1E6] dark:bg-[#1A1714]">
+                {recipe.authorImage ? (
+                  <Image
+                    src={recipe.authorImage}
+                    alt={recipe.authorName}
+                    fill
+                    className="object-cover"
+                  />
+                ) : null}
+              </div>
+              <span className="truncate text-xs text-[#6B6155] dark:text-[#B8AFA2]">
+                {recipe.authorName}
+              </span>
             </div>
-            <span className="truncate text-xs text-[#6B6155] dark:text-[#B8AFA2]">
-              {recipe.authorName}
-            </span>
+
+            {typeof recipe.likes === "number" ? (
+              <span className="flex shrink-0 items-center gap-0.75">
+                <HeartFill color="#E85D3D" width={18} height={18} />
+                {recipe.likes}
+              </span>
+            ) : null}
           </div>
         ) : null}
 

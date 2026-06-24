@@ -114,6 +114,7 @@ export default function AddRecipePage({ user }) {
         cuisineType: formData.get("cuisineType"),
         difficultyLevel: formData.get("difficultyLevel"),
         preparationTime: formData.get("preparationTime"),
+        price: formData.get("price"), // Added price field to payload
         ingredients: ingredients.filter((i) => i.trim() !== ""),
         instructions: formData.get("instructions"),
         authorId: user?.id,
@@ -270,6 +271,13 @@ export default function AddRecipePage({ user }) {
                 <FieldError className="text-xs text-[#D64545]" />
               </TextField>
             </div>
+
+            {/* Price (Added Field) */}
+            <TextField name="price" isRequired className="flex flex-col gap-1.5">
+              <Label className="text-sm font-medium text-[#2B2420]">Estimated Price</Label>
+              <Input placeholder="e.g. $15.00" className={fieldClass} />
+              <FieldError className="text-xs text-[#D64545]" />
+            </TextField>
 
             {/* Ingredients - dynamic list */}
             <div className="flex flex-col gap-2">

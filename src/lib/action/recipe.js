@@ -15,3 +15,6 @@ export const likeRecipe = async (recipeId ,userId) => {
 export const unlikeRecipe = (recipeId, userId) => {
     return serverMutation(`/api/my-recipe/${recipeId}/dislike?userId=${userId}`, null, 'PATCH')
 }
+export const reportRecipe = (report) => {
+    return serverMutation('/api/report', report)
+}

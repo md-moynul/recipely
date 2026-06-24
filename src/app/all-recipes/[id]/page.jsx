@@ -59,7 +59,7 @@ export default async function RecipeDetailsPage({ params }) {
           </div>
 
           {/* Recipe Metrics Meta Section */}
-          <div className="my-6 grid grid-cols-3 gap-4 rounded-2xl bg-[#FBF1E6]/50 p-4 text-center dark:bg-[#1A1714]/40">
+          <div className="my-6 grid grid-cols-2 gap-4 rounded-2xl bg-[#FBF1E6]/50 p-4 text-center sm:grid-cols-4 dark:bg-[#1A1714]/40">
             <div>
               <p className="text-xs font-semibold uppercase text-stone-400 dark:text-stone-500">
                 Prep Time
@@ -74,6 +74,14 @@ export default async function RecipeDetailsPage({ params }) {
               </p>
               <p className="mt-0.5 text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
                 {recipe.difficultyLevel}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase text-stone-400 dark:text-stone-500">
+                Price
+              </p>
+              <p className="mt-0.5 text-sm font-medium text-[#E85D3D]">
+                {recipe.price ? `$${recipe.price}` : "Free"}
               </p>
             </div>
             <div>

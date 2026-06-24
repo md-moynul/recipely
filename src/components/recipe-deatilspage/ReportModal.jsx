@@ -11,6 +11,9 @@ import {
   TextField,
 } from "@heroui/react";
 import { Flag } from "@gravity-ui/icons";
+import { reportRecipe } from "@/lib/action/recipe";
+import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
 
 const REASONS = [
   { value: "spam", label: "Spam or promotional content" },
@@ -22,19 +25,37 @@ export default function ReportDialog({ recipeId, recipeName }) {
   const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+   const {
+    data: session,
+    isPending,
+  } = authClient.useSession();
+  const user = session?.user;
+  const resetForm = () => {
+    setReason("");
+    setDetails("");
+  };
 
   const handleSubmit = async (close) => {
     if (!reason) return;
 
     setIsSubmitting(true);
     try {
-      // TODO: call your report server action here, e.g.
-      // await reportRecipe({ recipeId, reason, details });
-      console.log("Submitting report:", { recipeId, reason, details });
-
-      setReason("");
-      setDetails("");
-      close();
+      const report = {
+        recipeId,
+        reason,
+        details,
+        user: user?.id,
+        userName: user?.name,
+        userEmail: user?.email,
+        createdAt: new Date(),
+      };
+      const result = await reportRecipe(report);
+      if(result.insertedId) {
+        toast.error("Report submitted successfully!");
+        resetForm();
+        close();
+      }
+      // console.log("Report result:", result);
     } finally {
       setIsSubmitting(false);
     }
@@ -42,7 +63,6 @@ export default function ReportDialog({ recipeId, recipeName }) {
 
   return (
     <AlertDialog>
-      {/* Trigger must be the first direct child of AlertDialog (HeroUI v3 pattern) */}
       <Button
         variant="light"
         className="flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] dark:hover:bg-[#1A1714]"
@@ -53,7 +73,14 @@ export default function ReportDialog({ recipeId, recipeName }) {
 
       <AlertDialog.Backdrop>
         <AlertDialog.Container>
-          <AlertDialog.Dialog className="bg-white dark:bg-[#252019]">
+          <AlertDialog.Dialog
+            className="bg-white dark:bg-[#252019]"
+            onOpenChange={(isOpen) => {
+              // Reset selections whenever the dialog is dismissed
+              // without submitting (backdrop click, Escape, Cancel)
+              if (!isOpen) resetForm();
+            }}
+          >
             {({ close }) => (
               <>
                 <AlertDialog.Header>
@@ -70,7 +97,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
                     Help us understand what&apos;s wrong with this recipe.
                   </p>
 
-                  <RadioGroup value={reason} onChange={setReason}>
+                  <RadioGroup name="report-reason" value={reason} onChange={setReason}>
                     <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
                       Reason
                     </Label>
@@ -101,7 +128,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
                       value={details}
                       onChange={(e) => setDetails(e.target.value)}
                       placeholder="Anything else we should know?"
-                      className="rounded-xl border-[#EAE0D3] bg-[#FFF9F2] text-[#2B2420] placeholder:text-[#9C9388] dark:border-[#3A332A] dark:bg-[#1A1714] dark:text-[#F4EDE4]"
+                      className="bg-[#FFF9F2]"
                     />
                   </TextField>
                 </AlertDialog.Body>
@@ -109,8 +136,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
                 <AlertDialog.Footer>
                   <Button
                     slot="close"
-                    variant="flat"
-                    className="rounded-xl border border-[#EAE0D3] bg-white text-[#2B2420] hover:bg-[#FBF1E6] dark:border-[#3A332A] dark:bg-[#252019] dark:text-[#F4EDE4]"
+                    className="bg-white text-[#2B2420] hover:bg-[#FBF1E6] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
                     isDisabled={isSubmitting}
                   >
                     Cancel
@@ -118,7 +144,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
                   <Button
                     onPress={() => handleSubmit(close)}
                     isDisabled={!reason || isSubmitting}
-                    className="rounded-xl bg-[#D64545] text-white hover:bg-[#C13838] disabled:opacity-60"
+                    className="bg-[#D64545] text-white hover:bg-[#C13838] disabled:opacity-60"
                   >
                     {isSubmitting ? "Submitting…" : "Submit Report"}
                   </Button>
