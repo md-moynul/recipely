@@ -118,6 +118,7 @@ export default function AddRecipePage({ user }) {
         instructions: formData.get("instructions"),
         authorId: user?.id,
         likes: 0,
+        likedBy: [],
         isFeatured: false,
         status: "published",
         authorName: user?.name,

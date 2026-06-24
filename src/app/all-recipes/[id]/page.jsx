@@ -3,11 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { getRecipeByRecipeId } from "@/lib/api/recipe";
 import RecipeActions from "@/components/recipe-deatilspage/RecipeActions";
+import { getServerSession } from "@/lib/core/session";
 
 
 export default async function RecipeDetailsPage({ params }) {
   const { id } = await params;
   const recipe = await getRecipeByRecipeId(id);
+  const user = await getServerSession();
 
   return (
     <main className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8 ">
@@ -50,6 +52,8 @@ export default async function RecipeDetailsPage({ params }) {
                 recipeId={recipe._id}
                 recipeName={recipe.recipeName}
                 initialLikes={recipe.likes}
+                likedBy={recipe.likedBy}
+                userId={user?.id}
               />
             </div>
           </div>

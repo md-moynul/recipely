@@ -11,10 +11,13 @@ export default function RecipeActions({
   initialIsSaved = false,
   isPurchased = false,
   price,
+  userId,
+  likedBy,
 }) {
+    const isLiked = likedBy.includes(userId);
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      <LikeButton recipeId={recipeId} initialLikes={initialLikes} />
+      <LikeButton recipeId={recipeId} initialLikes={initialLikes} userId={userId} isLiked={isLiked} />
       <SaveButton recipeId={recipeId} initialIsSaved={initialIsSaved} />
       <PurchaseButton recipeId={recipeId} isPurchased={isPurchased} price={price} />
       <ReportDialog recipeId={recipeId} recipeName={recipeName} />
