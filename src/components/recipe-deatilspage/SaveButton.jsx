@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { ToggleButton } from "@heroui/react";
 import { Bookmark } from "@gravity-ui/icons";
-import { addFavorite } from "@/lib/action/recipe";
+import { addFavorite, removeFavorite } from "@/lib/action/recipe";
+import { toast } from "react-toastify";
 
-export default function SaveButton({ initialIsSaved = false, recipeId,userId ,userEmail}) {
+export default function SaveButton({ initialIsSaved , recipeId,userId ,userEmail}) {
   const [isSaved, setIsSaved] = useState(initialIsSaved);
 
   const handleChange = async(selected) => {
@@ -17,11 +18,14 @@ export default function SaveButton({ initialIsSaved = false, recipeId,userId ,us
       addedAt: new Date()
 
     }
-    const result = selected && await addFavorite(purseData) ;
+    const result = selected ?await addFavorite(purseData) : await removeFavorite(recipeId,userId);
     console.log(result);
-    
-    // TODO: call your save/unsave API/server action here, e.g.
-    // selected ? await addFavorite(recipeId) : await removeFavorite(recipeId);
+  if(result.insertedId) {
+    toast.success("Recipe saved successfully!");
+  }
+  if(result.deletedCount) {
+    toast.success("Recipe removed successfully!");
+  }
   };
 
   return (
