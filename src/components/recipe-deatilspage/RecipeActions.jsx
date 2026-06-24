@@ -17,8 +17,7 @@ export default async function RecipeActions({
   const user =await getServerSession();
   const userId = user?.id;
   const isLiked = likedBy.includes(userId);  
-  const favoritesRecipe = await getFavoritesRecipeByUserIDAndRecipeId(recipeId,userId);
- const initialIsSaved = favoritesRecipe[0] ? true : false;
+ const initialIsSaved = false;
   return (
     <div className="flex flex-wrap items-center gap-2.5">
       <LikeButton recipeId={recipeId} initialLikes={initialLikes} userId={userId} isLiked={isLiked} />

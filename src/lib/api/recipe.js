@@ -9,6 +9,6 @@ export const getRecipeByRecipeId = async (recipeId) => {
 export const getAllRecipes = async () => {
     return await serverFetch('/api/recipes');
 }
-export const getFavoritesRecipeByUserIDAndRecipeId = async(recipeId,userId) =>{
-    return await serverFetch(`/api/favorite?userId=${userId}&recipeId=${recipeId}`);
+export const getFavoritesRecipeByUserID = async(recipeId) =>{
+    return await serverFetch(`/api/favorite?recipeId=${recipeId}`);
 }

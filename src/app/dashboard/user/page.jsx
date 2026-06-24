@@ -1,18 +1,18 @@
+import { getFavoritesRecipeByUserID, getRecipeByAuthorId } from "@/lib/api/recipe";
+import { getServerSession } from "@/lib/core/session";
 import { Book, Bookmark, CreditCard, Heart, Star } from "@gravity-ui/icons";
 import Link from "next/link";
 
-// TODO: replace with your real server action/API call, e.g.
-// const stats = await getUserStats(user.id);
-const stats = {
-  totalRecipes: 8,
-  totalFavorites: 14,
-  totalLikesReceived: 132,
-  totalPurchased: 3,
-  isPremium: false,
-};
-
-const userPage = () => {
-  const { totalRecipes, totalFavorites, totalLikesReceived, totalPurchased, isPremium } = stats;
+const userPage = async () => {
+  const user = await getServerSession();
+  const recipe = await getRecipeByAuthorId(user?.id);
+  const favoriteRecipe = await getFavoritesRecipeByUserID(user?.id);
+  const totalRecipes = recipe?.length;
+  const isPremium = user?.isPremium;
+  const totalLikesReceived = recipe?.reduce((acc, curr) => acc + curr.likes, 0);
+  const totalFavorites = favoriteRecipe?.length;
+  const totalPurchased = 10;
+  // TODO: replace with your real server action/API call, e.g.
 
   const cards = [
     {
