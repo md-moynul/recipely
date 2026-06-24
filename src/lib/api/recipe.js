@@ -1,6 +1,6 @@
 import { serverFetch } from "../core/server";
 
-export const getRecipes = async (authorId) => {
+export const getRecipeByAuthorId = async (authorId) => {
     return await serverFetch(`/api/my-recipe?authorId=${authorId}`);
 }
 export const getRecipeByRecipeId = async (recipeId) => {

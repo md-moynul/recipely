@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
       data-theme="light"
       className={`${jakarta.variable} light h-full`}
     >
-      <body className="bg-[#FFF9F2]   dark:bg-[#1A1714] ">
+      <body className="bg-[#FFF9F2]   dark:bg-[#1A1714] text-foreground">
         <Navbar />
         <main>{children}</main>
          <ToastContainer />

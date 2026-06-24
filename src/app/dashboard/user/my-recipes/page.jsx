@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { getRecipes } from "@/lib/api/recipe";
 import { getServerSession } from "@/lib/core/session";
 import MyRecipesTable from "./MyRecipesTable";
+import { getRecipeByAuthorId } from "@/lib/api/recipe";
 
 const MyRecipePage = async () => {
   const user = await getServerSession();
-  const result = await getRecipes(user?.id);
+  const result = await getRecipeByAuthorId(user?.id);
 
   // Handles both possible shapes from getRecipes: a plain array, or
   // an object like { recipes: [...] }. Adjust if your API differs.

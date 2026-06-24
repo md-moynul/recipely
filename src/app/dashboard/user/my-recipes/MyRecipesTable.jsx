@@ -136,7 +136,7 @@ export default function MyRecipesTable({ recipes }) {
                     <Table.Cell>
                       <div className="flex items-center justify-end gap-1 rounded-lg border border-transparent p-0.5 transition-colors group-hover:border-[#EAE0D3] dark:group-hover:border-[#3A332A]">
                         <Link
-                          href={`/recipes/${id}`}
+                          href={`/all-recipes/${id}`}
                           aria-label="View recipe"
                           className="flex h-8 w-8 items-center justify-center rounded-lg text-[#6B6155] transition-colors hover:bg-[#FBF1E6] hover:text-[#2B2420] dark:text-[#B8AFA2] dark:hover:bg-[#1A1714] dark:hover:text-[#F4EDE4]"
                         >
