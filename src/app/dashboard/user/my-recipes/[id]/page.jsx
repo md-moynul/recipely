@@ -130,6 +130,7 @@ const EditRecipePage = ({ params }) => {
                 cuisineType: formData.get("cuisineType"),
                 difficultyLevel: formData.get("difficultyLevel"),
                 preparationTime: formData.get("preparationTime"),
+                price: formData.get("price"), // <-- Added price field logic here
                 ingredients: ingredients.filter((i) => i.trim() !== ""),
                 instructions: formData.get("instructions"),
                 updatedAt: new Date(),
@@ -141,11 +142,7 @@ const EditRecipePage = ({ params }) => {
                 router.push("/dashboard/user/my-recipes");
                 router.refresh();
             }
-            // console.log(result);
-            //   console.log("Update payload for", recipeId, payload);
         } catch (err) {
-            // IMPORTANT: log the real error object, not the (still-empty) `error` state.
-            // console.log("EditRecipePage handleSubmit error:", err);
             setError("Something went wrong. Please try again.");
         } finally {
             setIsSubmitting(false);
@@ -306,6 +303,29 @@ const EditRecipePage = ({ params }) => {
                                 <FieldError className="text-xs text-[#D64545]" />
                             </TextField>
                         </div>
+
+                        {/* Price Option Added Here */}
+                        <TextField
+                            name="price"
+                            isRequired
+                            defaultValue={recipe.price}
+                            className="flex flex-col gap-1.5"
+                        >
+                            <Label className="text-sm font-medium text-[#2B2420]">Price</Label>
+                            <InputGroup>
+                                <InputGroup.Prefix className={`${fieldBg} font-medium text-[#9C9388]`}>
+                                    $
+                                </InputGroup.Prefix>
+                                <InputGroup.Input 
+                                    type="number" 
+                                    step="0.01" 
+                                    min="0"
+                                    placeholder="e.g. 15.99" 
+                                    className={fieldClass} 
+                                />
+                            </InputGroup>
+                            <FieldError className="text-xs text-[#D64545]" />
+                        </TextField>
 
                         {/* Ingredients - dynamic list, pre-filled */}
                         <div className="flex flex-col gap-2">

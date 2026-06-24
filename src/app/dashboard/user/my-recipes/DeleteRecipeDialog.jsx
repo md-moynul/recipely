@@ -61,7 +61,7 @@ export default function DeleteRecipeDialog({ recipeId, recipeName }) {
 
                                 <AlertDialog.Footer>
                                     <Button
-            
+                                        slot="close"
                                         className="rounded-xl"
                                         isDisabled={isDeleting}
                                     >

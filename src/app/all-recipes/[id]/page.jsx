@@ -80,7 +80,7 @@ export default async function RecipeDetailsPage({ params }) {
               <p className="text-xs font-semibold uppercase text-stone-400 dark:text-stone-500">
                 Price
               </p>
-              <p className="mt-0.5 text-sm font-medium text-[#E85D3D]">
+              <p className="mt-0.5 text-lg font-bold text-[#E85D3D]">
                 {recipe.price ? `$${recipe.price}` : "Free"}
               </p>
             </div>
