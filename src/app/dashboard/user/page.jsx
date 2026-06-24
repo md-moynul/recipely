@@ -1,4 +1,5 @@
 import { Book, Bookmark, CreditCard, Heart, Star } from "@gravity-ui/icons";
+import Link from "next/link";
 
 // TODO: replace with your real server action/API call, e.g.
 // const stats = await getUserStats(user.id);
@@ -95,12 +96,12 @@ const userPage = () => {
               badge on your profile.
             </p>
           </div>
-          <a
+          <Link
             href="/dashboard/user/premium"
             className="shrink-0 rounded-xl bg-[#E85D3D] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
           >
             Upgrade Now
-          </a>
+          </Link>
         </div>
       )}
     </div>

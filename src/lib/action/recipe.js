@@ -18,3 +18,6 @@ export const unlikeRecipe = (recipeId, userId) => {
 export const reportRecipe = (report) => {
     return serverMutation('/api/report', report)
 }
+export const addFavorite = (recipeData) => {
+    return serverMutation(`/api/favorite`, recipeData)
+}
