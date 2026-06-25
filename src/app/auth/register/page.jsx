@@ -139,8 +139,8 @@ export default function RegisterPage() {
             </TextField>
 
             {/* Image URL Field */}
-            <TextField name="imageUrl" type="url" className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Avatar URL (Optional)</Label>
+            <TextField name="imageUrl" type="url" isRequired className="flex flex-col gap-1.5">
+              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Avatar URL</Label>
               <InputGroup>
                 <InputGroup.Prefix>
                   <span className="px-1 text-xs font-semibold text-[#9C9388] dark:text-[#F4EDE4]">URL</span>

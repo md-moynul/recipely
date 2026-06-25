@@ -1,4 +1,4 @@
-import { getFavoritesRecipeByUserID, getRecipeByAuthorId } from "@/lib/api/recipe";
+import {getRecipeByAuthorId, getRecipeByUserEmail } from "@/lib/api/recipe";
 import { getServerSession } from "@/lib/core/session";
 import { Book, Bookmark, CreditCard, Heart, Star } from "@gravity-ui/icons";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import Link from "next/link";
 const userPage = async () => {
   const user = await getServerSession();
   const recipe = await getRecipeByAuthorId(user?.id);
-  const favoriteRecipe = await getFavoritesRecipeByUserID(user?.id);
+  const favoriteRecipe = await getRecipeByUserEmail(user?.email);
   const totalRecipes = recipe?.length;
   const isPremium = user?.isPremium;
   const totalLikesReceived = recipe?.reduce((acc, curr) => acc + curr.likes, 0);
