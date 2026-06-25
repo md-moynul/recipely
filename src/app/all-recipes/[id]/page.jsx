@@ -5,12 +5,17 @@ import Link from "next/link";
 import { getRecipeByRecipeId } from "@/lib/api/recipe";
 import RecipeActions from "@/components/recipe-deatilspage/RecipeActions";
 import { getServerSession } from "@/lib/core/session";
+import { redirect } from "next/navigation";
 
 
 export default async function RecipeDetailsPage({ params }) {
   const { id } = await params;
-  const recipe = await getRecipeByRecipeId(id);
   const user = await getServerSession();
+  if (!user){
+   redirect(`/auth/login?redirectBy=/all-recipes/${id}`);
+  }
+  
+  const recipe = await getRecipeByRecipeId(id);
 
   return (
     <main className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8 ">

@@ -11,13 +11,14 @@ import {
   CreditCard,
   Person,
   Plus,
+  Flag,
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 
-export default function DashboardSidebar({ isPremium }) {
+export default function DashboardSidebar({ user }) {
   const pathname = usePathname();
-
-  const navItems = [
+  const isPremium = user?.isPremium;
+  const userNavItems = [
     {
       icon: LayoutCellsLarge,
       label: "Overview",
@@ -49,6 +50,37 @@ export default function DashboardSidebar({ isPremium }) {
       href: "/dashboard/profile",
     },
   ];
+
+  // Per spec: Admin Dashboard = Overview, Manage Users, Manage Recipes, Reports
+  const adminNavItems = [
+    {
+      icon: LayoutCellsLarge,
+      label: "Overview",
+      href: "/dashboard/admin",
+    },
+    {
+      icon: Person,
+      label: "Manage Users",
+      href: "/dashboard/admin/manage-users",
+    },
+    {
+      icon: Book,
+      label: "Manage Recipes",
+      href: "/dashboard/admin/manage-recipes",
+    },
+    {
+      icon: Flag,
+      label: "Reports",
+      href: "/dashboard/admin/reports",
+    },
+    {
+      icon: Person,
+      label: "Profile",
+      href: "/dashboard/profile",
+    },
+  ];
+
+  const navItems = user?.role === "admin" ? [...adminNavItems] : [...userNavItems];
 
   // `onLinkClick` lets us close the drawer on mobile when a nav item is tapped.
   // It's passed the drawer's own close callback from inside Drawer.Dialog's render-prop.

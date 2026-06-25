@@ -37,7 +37,7 @@ export default function Navbar() {
 
   const navLinks = [
     ...baseNavLinks,
-    ...(session ? [{ label: "Dashboard", href: "/dashboard/user" }] : []),
+    ...(session ? [{ label: "Dashboard", href: `/dashboard/${session.user.role}` }] : []),
   ];
 
   const authSections = (
