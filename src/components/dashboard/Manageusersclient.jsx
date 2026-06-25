@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import ManageUsersTable from "./Manageuserstable";
+import ManageUsersTable from "./ManageUsersTable";
+import { userStatusToggle } from "@/lib/action/user";
 
-// TODO: import your real API helper, e.g.
-// import { setUserBlockedStatus } from "@/lib/api/user";
 
 export default function ManageUsersClient({ initialUsers }) {
   const [users, setUsers] = useState(initialUsers ?? []);
@@ -19,7 +18,10 @@ export default function ManageUsersClient({ initialUsers }) {
 
     try {
       // TODO: replace with your real server action / API call, e.g.
-      // await setUserBlockedStatus(userId, nextIsBlocked);
+      
+     const result = await userStatusToggle (userId, nextIsBlocked);
+     console.log(result);
+     
       console.log("Toggling block status:", userId, nextIsBlocked);
     } catch (err) {
       // Roll back on failure

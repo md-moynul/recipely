@@ -1,4 +1,4 @@
-import ManageUsersClient from "@/components/dashboard/Manageusersclient";
+import ManageUsersClient from "@/components/dashboard/ManageUsersClient";
 import { getAllUsers } from "@/lib/api/user";
 
 
