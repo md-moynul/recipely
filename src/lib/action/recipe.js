@@ -25,3 +25,7 @@ export const removeFavorite = (recipeId,userId) => {
     console.log(recipeId,userId);
     return serverMutation(`/api/favorite/${recipeId}/${userId}`, null, 'DELETE')
 }
+export const featureRecipe = (recipeId, isFeatured) => {
+    console.log(recipeId, isFeatured);
+    return serverMutation(`/api/featured/${recipeId}?isFeatured=${isFeatured}`, null, 'PATCH')
+}

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Table } from "@heroui/react";
 import { Eye, Pencil } from "@gravity-ui/icons";
-import DeleteRecipeDialog from "./DeleteRecipeDialog";
+import DeleteRecipeDialog from "../../../../components/dashboard/DeleteRecipeDialog";
 
 const STATUS_STYLES = {
   published:
