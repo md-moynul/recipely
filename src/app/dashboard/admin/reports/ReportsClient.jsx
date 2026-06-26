@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import ReportsTable from "./ReportsTable";
-
-// TODO: import your real API helpers, e.g.
-// import { dismissReport, removeReportedRecipe } from "@/lib/api/report";
+import { dismissReport } from "@/lib/action/report";
+import { toast } from "react-toastify";
+import { deleteRecipe } from "@/lib/action/recipe";
 
 export default function ReportsClient({ initialReports }) {
   const [reports, setReports] = useState(initialReports ?? []);
@@ -18,9 +18,11 @@ export default function ReportsClient({ initialReports }) {
   const handleDismiss = async (reportId) => {
     updateStatus(reportId, "dismissed");
     try {
-      // TODO: replace with your real call, e.g.
-      // await dismissReport(reportId);
-      console.log("Dismissing report:", reportId);
+      const res = await dismissReport(reportId);
+      if (res?.deletedCount) {
+        updateStatus(reportId, "resolved");
+        toast.success("Report dismissed");
+      }
     } catch (err) {
       updateStatus(reportId, "pending");
       console.error("Failed to dismiss report:", err);
@@ -30,8 +32,8 @@ export default function ReportsClient({ initialReports }) {
   const handleRemoveRecipe = async (reportId, recipeId) => {
     updateStatus(reportId, "resolved");
     try {
-      // TODO: replace with your real call, e.g.
-      await removeReportedRecipe(reportId, recipeId);
+      const res = await dismissReport(reportId);
+      await deleteRecipe(recipeId);
       console.log("Removing recipe for report:", reportId, recipeId);
     } catch (err) {
       updateStatus(reportId, "pending");
