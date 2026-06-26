@@ -15,7 +15,7 @@ const favoritePage = async () => {
   const favorites = await Promise.all(
     rawFavorites.map(async (fav) => ({
       ...fav,
-      recipe: (await getRecipeByRecipeId(fav.recipeId)) ?? DUMMY_RECIPE,
+      recipe: (await getRecipeByRecipeId(fav.recipeId)) ,
     }))
   );
 
