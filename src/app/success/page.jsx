@@ -3,10 +3,8 @@ import Link from "next/link";
 import { CircleCheck } from "@gravity-ui/icons";
 import { stripe } from "@/lib/stripe";
 import { postPayment } from "@/lib/action/payment";
-// TODO: implement this — should insert/update a document in your
-// `payments` collection per the spec: userEmail, userId, amount, recipeId,
-// transactionId, paymentStatus, paidAt
-// import { savePaymentTransaction } from "@/lib/api/payment";
+import { getServerSession } from "@/lib/core/session";
+import { changeIsPremium } from "@/lib/action/user";
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -22,14 +20,16 @@ export default async function Success({ searchParams }) {
   const { status, customer_details, amount_total, currency, metadata } =
     session;
   const customerEmail = customer_details?.email;
-
+  const user = await getServerSession()
   if (status === "open") {
     return redirect("/");
   }
 
   if (status === "complete") {
     const purchaseType = metadata?.purchaseType ?? "premium";
-
+    if (purchaseType === "premium") {
+        await changeIsPremium(user?.id, true);
+    }
     // Persist the transaction. Safe to call repeatedly if this page is
     // revisited — make savePaymentTransaction upsert on transactionId
     // (Stripe session/payment_intent id) so refreshing doesn't duplicate rows.
