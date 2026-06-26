@@ -60,6 +60,7 @@ export default async function RecipeDetailsPage({ params }) {
                 initialLikes={recipe.likes}
                 likedBy={recipe.likedBy}
                 userId={user?.id}
+                price={recipe.price}
               />
             </div>
           </div>

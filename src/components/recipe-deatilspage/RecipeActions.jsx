@@ -18,6 +18,8 @@ export default async function RecipeActions({
   const userId = user?.id;
   const isLiked = likedBy.includes(userId);  
  const initialIsSaved = false;
+ console.log(price);
+ 
   return (
     <div className="flex flex-wrap items-center gap-2.5">
       <LikeButton recipeId={recipeId} initialLikes={initialLikes} userId={userId} isLiked={isLiked} />
