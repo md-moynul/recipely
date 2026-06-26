@@ -1,48 +1,60 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, GraduationCap, Heart, HeartFill } from "@gravity-ui/icons";
+import { Clock, GraduationCap, HeartFill, SealCheck } from "@gravity-ui/icons";
 
 export default function NormalRecipes({ recipe }) {
   const id = recipe._id ?? recipe.id;
 
   return (
-    <div className="group overflow-hidden rounded-2xl border border-[#EAE0D3] bg-white transition-shadow hover:shadow-md dark:border-[#3A332A] dark:bg-[#252019]">
-      <div className="relative h-44 w-full overflow-hidden bg-[#FBF1E6] dark:bg-[#1A1714]">
+    <div className="group overflow-hidden rounded-2xl border border-[#EAE0D3] bg-white transition-all duration-300 hover:shadow-xl dark:border-[#3A332A] dark:bg-[#252019]">
+      <div className="relative h-48 w-full overflow-hidden bg-[#FBF1E6] dark:bg-[#1A1714]">
         {recipe.recipeImage ? (
           <Image
             src={recipe.recipeImage}
             alt={recipe.recipeName}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-[#C9BFAF]">
-            <GraduationCap width={28} height={28} />
+            <GraduationCap width={40} height={40} />
           </div>
         )}
 
-        {recipe.category ? (
-          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-[#2B2420] backdrop-blur-sm dark:bg-[#252019]/90 dark:text-[#F4EDE4]">
+        {/* Category Badge */}
+        {recipe.category && (
+          <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-medium text-[#2B2420] shadow-sm backdrop-blur-sm dark:bg-[#252019]/95 dark:text-[#F4EDE4]">
             {recipe.category}
           </span>
-        ) : null}
+        )}
 
-        {recipe.price ? (
-          <span className="absolute right-3 top-3 rounded-full bg-[#E85D3D] px-2.5 py-1 text-xs font-semibold text-white">
-            ${recipe.price}
-          </span>
-        ) : null}
+        {/* Featured Badge */}
+        {recipe.isFeatured && (
+          <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-linear-to-r from-amber-500 to-yellow-600 px-3 py-1 text-xs font-semibold text-white shadow-lg ring-1 ring-white/30">
+            <SealCheck width={16} height={16} className="drop-shadow-sm" />
+            <span>Featured</span>
+          </div>
+        )}
       </div>
 
-      <div className="p-4">
-        <h3 className="truncate text-sm font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
-          {recipe.recipeName}
-        </h3>
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="flex-1 line-clamp-1 text-base font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
+            {recipe.recipeName}
+          </h3>
 
-        {recipe.authorName ? (
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded-full bg-[#FBF1E6] dark:bg-[#1A1714]">
+        
+          {recipe.price && (
+            <div className="shrink-0 rounded-xl bg-[#E85D3D] px-3 py-1 text-sm font-bold text-white shadow-sm">
+              ${recipe.price}
+            </div>
+          )}
+        </div>
+
+        {recipe.authorName && (
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="relative h-6 w-6 overflow-hidden rounded-full bg-[#FBF1E6] dark:bg-[#1A1714] ring-1 ring-white dark:ring-[#3A332A]">
                 {recipe.authorImage ? (
                   <Image
                     src={recipe.authorImage}
@@ -52,34 +64,34 @@ export default function NormalRecipes({ recipe }) {
                   />
                 ) : null}
               </div>
-              <span className="truncate text-xs text-[#6B6155] dark:text-[#B8AFA2]">
+              <span className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
                 {recipe.authorName}
               </span>
             </div>
 
-            {typeof recipe.likes === "number" ? (
-              <span className="flex shrink-0 items-center gap-0.75">
-                <HeartFill color="#E85D3D" width={18} height={18} />
-                {recipe.likes}
-              </span>
-            ) : null}
+            {typeof recipe.likes === "number" && (
+              <div className="flex items-center gap-1 text-[#E85D3D]">
+                <HeartFill width={18} height={18} />
+                <span className="text-sm font-medium">{recipe.likes}</span>
+              </div>
+            )}
           </div>
-        ) : null}
+        )}
 
-        <div className="mt-2 flex items-center gap-3 text-xs text-[#6B6155] dark:text-[#B8AFA2]">
-          {recipe.cuisineType ? <span>{recipe.cuisineType}</span> : null}
+        <div className="mt-4 flex items-center gap-4 text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+          {recipe.cuisineType && <span>{recipe.cuisineType}</span>}
 
-          {recipe.preparationTime ? (
-            <span className="flex items-center gap-1">
-              <Clock width={13} height={13} />
+          {recipe.preparationTime && (
+            <span className="flex items-center gap-1.5">
+              <Clock width={15} height={15} />
               {recipe.preparationTime}
             </span>
-          ) : null}
+          )}
         </div>
 
         <Link
           href={`/all-recipes/${id}`}
-          className="mt-4 inline-flex w-full items-center justify-center rounded-xl bg-[#E85D3D] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
+          className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-[#E85D3D] py-3 text-sm font-semibold text-white transition-all hover:bg-[#D14E30] active:scale-[0.985]"
         >
           View Details
         </Link>

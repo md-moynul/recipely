@@ -15,3 +15,6 @@ export const getRecipeByUserEmail = async (userEmail) => {
 export const getRecipeThisMonth = async (userId) => {
     return await serverFetch(`/api/my-recipe/this-month?authorId=${userId}`);
 }
+export const getFeaturedRecipe = async () => {
+    return await serverFetch('/api/recipes/featured');
+}
