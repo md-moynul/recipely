@@ -70,7 +70,7 @@ const page = async () => {
           </div>
         </div>
 
-        {!user?.isPremium && (
+        {user?.role !== "admin" && !user?.isPremium && (
           <div className="mt-6 flex flex-col items-start justify-between gap-3 rounded-xl border border-[#F4A340]/40 bg-[#F4A340]/10 p-4 sm:flex-row sm:items-center">
             <p className="text-sm text-[#B5781F]">
               Go Premium to unlock unlimited recipes and a premium badge.

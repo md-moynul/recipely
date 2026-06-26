@@ -94,19 +94,17 @@ export default function DashboardSidebar({ user }) {
           <Link key={item.href} href={item.href} onClick={onLinkClick}>
             <button
               type="button"
-              className={`w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all text-left relative group ${
-                isActive
+              className={`w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all text-left relative group ${isActive
                   ? "bg-[#E85D3D]/10 text-[#E85D3D] cursor-pointer"
                   : "text-[#6B6155] hover:text-[#2B2420] hover:bg-[#FBF1E6] cursor-pointer dark:text-[#B8AFA2] dark:hover:text-[#F4EDE4] dark:hover:bg-[#252019]"
-              }`}
+                }`}
             >
               <div className="flex items-center gap-3.5">
                 <IconComponent
-                  className={`w-5 h-5 ${
-                    isActive
+                  className={`w-5 h-5 ${isActive
                       ? "text-[#E85D3D]"
                       : "text-[#9C9388] group-hover:text-[#6B6155] dark:text-[#7A7266] dark:group-hover:text-[#B8AFA2]"
-                  }`}
+                    }`}
                 />
                 <span>{item.label}</span>
               </div>
@@ -121,7 +119,7 @@ export default function DashboardSidebar({ user }) {
     </nav>
   );
 
-  const premiumCard = !isPremium ? (
+  const premiumCards = !isPremium ? (
     <div className="mt-auto rounded-2xl border border-[#F4A340]/40 p-4">
       <p className="text-sm font-medium text-[#B5781F]">Go Premium</p>
       <p className="mt-1 text-xs text-[#6B6155] dark:text-[#B8AFA2]">
@@ -148,7 +146,7 @@ export default function DashboardSidebar({ user }) {
       </Link>
     </div>
   );
-
+  const premiumCard = user?.role !== "admin" && premiumCards;
   return (
     <div>
       {/* Mobile Header + Drawer
