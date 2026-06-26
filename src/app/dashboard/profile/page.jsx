@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Star, Calendar } from "@gravity-ui/icons";
 import { getServerSession } from "@/lib/core/session";
 import EditProfileDialog from "./EditProfileDialog";
+import Link from "next/link";
 
 
 // TODO: replace with your real session/user fetch, e.g.
@@ -75,12 +76,12 @@ const page = async () => {
             <p className="text-sm text-[#B5781F]">
               Go Premium to unlock unlimited recipes and a premium badge.
             </p>
-            <a
-              href="/dashboard/user/premium"
+            <Link
+              href="/premium"
               className="shrink-0 rounded-xl bg-[#E85D3D] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
             >
               Upgrade
-            </a>
+            </Link>
           </div>
         )}
       </div>

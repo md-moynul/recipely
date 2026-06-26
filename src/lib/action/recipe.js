@@ -22,7 +22,6 @@ export const addFavorite = (recipeData) => {
     return serverMutation(`/api/favorite`, recipeData)
 }
 export const removeFavorite = (recipeId,userId) => {
-    console.log(recipeId,userId);
     return serverMutation(`/api/favorite/${recipeId}/${userId}`, null, 'DELETE')
 }
 export const featureRecipe = (recipeId, isFeatured) => {

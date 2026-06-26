@@ -125,7 +125,7 @@ export default function DashboardSidebar({ user }) {
       <p className="mt-1 text-xs text-[#6B6155] dark:text-[#B8AFA2]">
         Unlock unlimited recipes and a premium badge.
       </p>
-      <Link href="/dashboard/user/premium">
+      <Link href="/premium">
         <Button className="mt-4 w-full rounded-xl bg-[#E85D3D] text-white hover:bg-[#D14E30]" size="sm">
           <Plus className="w-4 h-4" />
           Upgrade

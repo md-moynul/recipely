@@ -10,7 +10,6 @@ export const getAllRecipes = async () => {
     return await serverFetch('/api/recipes');
 }
 export const getRecipeByUserEmail = async (userEmail) => {
-    console.log(userEmail);
     return await serverFetch(`/api/my-recipe/favorite/${userEmail}`);
 }
 export const getRecipeThisMonth = async (userId) => {
