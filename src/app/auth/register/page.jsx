@@ -15,13 +15,15 @@ import {
 } from "@heroui/react";
 import { Envelope, Lock, Person, Eye, EyeSlash } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 export default function RegisterPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectBy = params.get("redirectBy");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,14 +43,13 @@ export default function RegisterPage() {
         password,
         name,
         image,
-        callbackURL: "/",
       });
       if (error) {
         toast.error("An unexpected error occurred during registration.");
-      } 
-      if(data) {
+      }
+      if (data) {
         toast.success("Registration successful!");
-        router.push("/"); // Redirect to home page after successful registration
+        router.push(redirectBy ? redirectBy : "/"); // Redirect to home page after successful registration
       }
     } catch (err) {
       console.error("Unexpected error during registration:", err);
@@ -253,7 +254,7 @@ export default function RegisterPage() {
           {/* Footer link */}
           <p className="mt-8 text-center text-sm text-[#6B6155] dark:text-[#F4EDE4]">
             Already have an account?{" "}
-            <Link href="/auth/login" className="font-medium text-[#E85D3D] hover:text-[#D14E30]">
+            <Link href={`/auth/login?${redirectBy ? `redirectBy=${redirectBy}` : ""}`} className="font-medium text-[#E85D3D] hover:text-[#D14E30]">
               Log in
             </Link>
           </p>

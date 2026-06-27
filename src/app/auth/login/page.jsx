@@ -16,11 +16,14 @@ import {
 import { Envelope, Lock, Eye, EyeSlash } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const params = useSearchParams();
+  const router = useRouter();
+  const redirectBy = params.get("redirectBy");
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (isSubmitting) return;
@@ -31,17 +34,16 @@ export default function LoginPage() {
     const email = formData.get("email");
     const password = formData.get("password");
     const remember = formData.get("remember") === "on";
-    console.log(email,password,remember);
 
     try {
       const { data, error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: "/",
         rememberMe: remember,
       });
       if (data) {
         toast.success("Logged in successfully!");
+        router.push(redirectBy? redirectBy : "/");
       }
       if (error) {
         toast.error("Login error:", error.message);
@@ -192,7 +194,7 @@ export default function LoginPage() {
           {/* Footer link */}
           <p className="mt-8 text-center text-sm text-[#6B6155] dark:text-[#F4EDE4]">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/register" className="font-medium text-[#E85D3D] hover:text-[#D14E30]">
+            <Link href={`/auth/register?${redirectBy ? `redirectBy=${redirectBy}` : ""}`} className="font-medium text-[#E85D3D] hover:text-[#D14E30]">
               Sign up
             </Link>
           </p>
