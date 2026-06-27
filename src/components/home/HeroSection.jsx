@@ -1,73 +1,103 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
 export default function HeroSection() {
-    // Create a reference to the video element
-    const videoRef = useRef(null);
+  // Create a reference to the video element
+  const videoRef = useRef(null);
 
-    // Set the playback speed to 0.75x once the component mounts
-    useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.playbackRate = 0.5;
-        }
-    }, []);
+  // Set the playback speed to 0.75x once the component mounts
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.5;
+    }
+  }, []);
 
-    return (
-        <header className="relative flex h-[90vh] w-full items-center justify-center overflow-hidden">
-            {/* Background video */}
-            <video
-                ref={videoRef}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute top-0 left-0 z-10 h-full w-full object-cover pointer-events-none"
+  return (
+    <motion.header
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="relative flex h-[90vh] w-full items-center justify-center overflow-hidden"
+    >
+      {/* Background video */}
+      <motion.video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        initial={{ opacity: 0, scale: 1.08 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="absolute top-0 left-0 z-10 h-full w-full object-cover pointer-events-none"
+      >
+        <source src="/cooking.mp4" type="video/mp4" />
+      </motion.video>
+
+      {/* Dark overlay for readability */}
+      <div className="absolute top-0 left-0 z-20 h-full w-full bg-black/40" />
+
+      {/* Content */}
+      <motion.div
+        initial="hidden"
+        animate="show"
+        variants={container}
+        className="relative z-30 px-6 text-center text-white"
+      >
+        <motion.h1
+          variants={item}
+          className="mx-auto max-w-3xl text-4xl font-semibold leading-tight md:text-[60px]"
+        >
+          Every recipe worth keeping, in one place.
+        </motion.h1>
+
+        <motion.p
+          variants={item}
+          className="mx-auto mt-5 max-w-xl text-lg text-white/80 md:text-xl"
+        >
+          Save what you cook, discover what others love, and build a kitchen
+          notebook that actually gets used.
+        </motion.p>
+
+        <motion.div
+          variants={item}
+          className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
+        >
+          <Link href="/all-recipes">
+            <Button
+              size="lg"
+              className="bg-[#E85D3D] font-medium text-white hover:bg-[#D14E30]"
             >
-                <source src="/cooking.mp4" type="video/mp4" />
-            </video>
-
-            {/* Dark overlay for readability */}
-            <div className="absolute top-0 left-0 z-20 h-full w-full bg-black/40" />
-
-            {/* Content */}
-            <div className="relative z-30 px-6 text-center text-white">
-                <h1 className="mx-auto max-w-3xl text-4xl font-semibold leading-tight md:text-[60px]">
-                    Every recipe worth keeping, in one place.
-                </h1>
-                <p className="mx-auto mt-5 max-w-xl text-lg text-white/80 md:text-xl">
-                    Save what you cook, discover what others love, and build a kitchen
-                    notebook that actually gets used.
-                </p>
-                <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                    <Link
-                        href="/all-recipes"
-
-                    >
-                        <Button
-                            size="lg"
-                            className=" bg-[#E85D3D]  font-medium text-white  hover:bg-[#D14E30]"
-                        >
-
-                            Browse Recipes
-                        </Button>
-                    </Link>
-                    <Link
-                        href="/auth/register"
-
-                    >
-                        <Button
-                            size="lg"
-                            className="bg-white/10 text-white font-medium hover:border hover:border-[#F4EDE4]"
-                        >
-                            Join Recipely
-                        </Button>
-
-                    </Link>
-                </div>
-            </div>
-        </header>
-    );
+              Browse Recipes
+            </Button>
+          </Link>
+          <Link href="/auth/register">
+            <Button
+              size="lg"
+              className="bg-white/10 text-white font-medium hover:border hover:border-[#F4EDE4]"
+            >
+              Join Recipely
+            </Button>
+          </Link>
+        </motion.div>
+      </motion.div>
+    </motion.header>
+  );
 }

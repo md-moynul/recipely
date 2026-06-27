@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       data-theme="light"
-      className={`${jakarta.variable} light h-full`}
+      className={`${jakarta.variable} light h-full scroll-smooth`}
     >
       <body className="bg-[#FFF9F2]   dark:bg-[#1A1714] text-foreground">
         <Navbar />

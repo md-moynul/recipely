@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "@heroui/styles";
+
 @layer base {
+
   :root,
   [data-theme="light"] {
     color-scheme: light;
@@ -9,4 +11,24 @@
   [data-theme="dark"] {
     color-scheme: dark;
   }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee-scroll 80s linear infinite;
+}
+
+/* Plain CSS :hover on the wrapper — more reliable across Tailwind
+   versions than the group-hover arbitrary-value variant. */
+.marquee-wrapper:hover .animate-marquee {
+  animation-play-state: paused;
 }
