@@ -5,8 +5,15 @@ import { getPlansByIsPremium } from "@/lib/api/plan";
 import RecipeLimitBar from "./RecipeLimitBar";
 import RecipeLimitReached from "./RecipeLimitReached";
 import { getRecipeThisMonth } from "@/lib/api/recipe";
+import BlockedAccount from "./BlockedAccount";
+
 const page = async () => {
   const user = await getServerSession();
+
+  if (user?.isBlocked) {
+    return <BlockedAccount/>;
+  }
+
   const plan = await getPlansByIsPremium(user.isPremium);
   const thisMonthRecipe = await getRecipeThisMonth(user.id);
   const usedCount = thisMonthRecipe.length;
@@ -25,4 +32,5 @@ const page = async () => {
     </div>
   );
 };
+
 export default page;
