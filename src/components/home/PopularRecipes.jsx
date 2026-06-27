@@ -86,7 +86,7 @@ export default function PopularRecipesSection({ recipes }) {
             </h2>
           </div>
           <Link
-            href="/popular"
+            href="/all-recipes"
             className="hidden text-sm font-medium text-[#E85D3D] hover:text-[#D14E30] sm:block"
           >
             View all →

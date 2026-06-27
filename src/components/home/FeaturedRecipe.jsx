@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Star } from "@gravity-ui/icons";
+import { Star, StarFill } from "@gravity-ui/icons";
 
 const container = {
   hidden: { opacity: 0 },
@@ -37,7 +37,7 @@ function FeaturedCard({ recipe }) {
         ) : null}
 
         <span className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-[#F4A340] px-2.5 py-1 text-xs font-semibold  text-white">
-          <Star width={12} height={12} />
+          <StarFill width={12} height={12} />
           Featured
         </span>
       </div>
@@ -88,7 +88,7 @@ export default function FeaturedRecipesSection({ recipes }) {
             </p>
           </div>
           <Link
-            href="/featured"
+            href="/all-recipes"
             className="hidden text-sm font-medium text-[#E85D3D] hover:text-[#D14E30] sm:block"
           >
             View all →
