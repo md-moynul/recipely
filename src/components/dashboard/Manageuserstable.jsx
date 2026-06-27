@@ -25,7 +25,7 @@ function RoleBadge({ role }) {
     );
 }
 
-export default function ManageUsersTable({ users, onBlockToggle }) {
+export default function ManageUsersTable({ users, onBlockToggle, setCurrentUser,currentUser }) {
     if (!users || users.length === 0) {
         return (
             <div className="mt-10 rounded-2xl border border-dashed border-[#EAE0D3] p-12 text-center dark:border-[#3A332A]">
@@ -120,7 +120,7 @@ export default function ManageUsersTable({ users, onBlockToggle }) {
                                             variant="light"
                                             // Disable the button if the user is an admin
                                             isDisabled={u.role === "admin"}
-                                            onPress={() => onBlockToggle?.(id, !u.isBlocked)}
+                                            onPress={() => { onBlockToggle?.(id, !u.isBlocked); setCurrentUser(u?.name);}}
                                             className={`flex items-center gap-1.5 rounded-lg px-3 text-xs font-medium ${u.role === "admin"
                                                     ? "opacity-50 cursor-not-allowed text-gray-400" // Optional styles for disabled admin state
                                                     : u.isBlocked

@@ -3,11 +3,12 @@
 import { useState } from "react";
 import ManageUsersTable from "./ManageUsersTable";
 import { userStatusToggle } from "@/lib/action/user";
+import { toast } from "react-toastify";
 
 
 export default function ManageUsersClient({ initialUsers }) {
   const [users, setUsers] = useState(initialUsers ?? []);
-
+  const [currentUser, setCurrentUser] = useState(null);
   const handleBlockToggle = async (userId, nextIsBlocked) => {
     // Optimistic update
     setUsers((prev) =>
@@ -17,12 +18,11 @@ export default function ManageUsersClient({ initialUsers }) {
     );
 
     try {
-      // TODO: replace with your real server action / API call, e.g.
-      
      const result = await userStatusToggle (userId, nextIsBlocked);
-     console.log(result);
+     if(result.modifiedCount){
+      toast.success(`${nextIsBlocked ? "Blocked" : "Unblocked"} ${currentUser} successfully`);
+     }
      
-      console.log("Toggling block status:", userId, nextIsBlocked);
     } catch (err) {
       // Roll back on failure
       setUsers((prev) =>
@@ -34,5 +34,5 @@ export default function ManageUsersClient({ initialUsers }) {
     }
   };
 
-  return <ManageUsersTable users={users} onBlockToggle={handleBlockToggle} />;
+  return <ManageUsersTable users={users} onBlockToggle={handleBlockToggle} currentUser={currentUser} setCurrentUser={setCurrentUser} />;
 }
