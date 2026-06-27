@@ -1,4 +1,4 @@
-import ManageUsersClient from "@/components/dashboard/ManageUsersClient";
+import ManageUsers from "@/components/dashboard/ManageUsers";
 import { getAllUsers } from "@/lib/api/user";
 
 
@@ -16,7 +16,7 @@ const ManageUserPage = async () => {
         </p>
       </div>
 
-      <ManageUsersClient initialUsers={users} />
+      <ManageUsers initialUsers={users} />
     </div>
   );
 };

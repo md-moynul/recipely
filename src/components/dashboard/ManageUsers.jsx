@@ -6,7 +6,7 @@ import { userStatusToggle } from "@/lib/action/user";
 import { toast } from "react-toastify";
 
 
-export default function ManageUsersClient({ initialUsers }) {
+export default function ManageUsers({ initialUsers }) {
   const [users, setUsers] = useState(initialUsers ?? []);
   const [currentUser, setCurrentUser] = useState(null);
   const handleBlockToggle = async (userId, nextIsBlocked) => {
