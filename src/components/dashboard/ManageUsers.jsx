@@ -19,7 +19,8 @@ export default function ManageUsers({ initialUsers }) {
     try {
      const result = await userStatusToggle (userId, nextIsBlocked);
      if(result.modifiedCount){
-      toast.success(`${nextIsBlocked ? "Blocked" : "Unblocked"} ${currentUser} successfully`);
+      
+      toast.success(`${currentUser ? currentUser : 'User'} ${nextIsBlocked ? 'blocked' : 'unblocked'}`);
      }
      
     } catch (err) {

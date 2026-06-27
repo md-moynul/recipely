@@ -1,5 +1,8 @@
-import { serverMutation } from "../core/server";
+import { authClient } from "../auth-client";
+import { protectedMutation } from "../core/server";
 
 export const dismissReport = async (reportId) => {
-    return await serverMutation(`/api/reports/${reportId}/dismiss`, null,'DELETE');
+    const {data} = await authClient.token()
+     const token = `Bearer ${data.token}`
+    return await protectedMutation(`/api/reports/${reportId}/dismiss`, null, token, 'DELETE')
 };

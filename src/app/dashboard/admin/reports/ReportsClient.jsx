@@ -34,7 +34,6 @@ export default function ReportsClient({ initialReports }) {
     try {
       const res = await dismissReport(reportId);
       await deleteRecipe(recipeId);
-      console.log("Removing recipe for report:", reportId, recipeId);
     } catch (err) {
       updateStatus(reportId, "pending");
       console.error("Failed to remove recipe:", err);

@@ -39,7 +39,6 @@ export default function ManageRecipesTable({ recipes }) {
     const handleFeature = async (recipeId, currentStatus) => {
         try {
             const result = await featureRecipe(recipeId, !currentStatus);
-            console.log(result);
             if (result?.modifiedCount) {
                 toast.success(
                     currentStatus

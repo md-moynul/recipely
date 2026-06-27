@@ -1,7 +1,10 @@
-import { serverFetch, serverMutation } from "../core/server";
+import { authClient } from "../auth-client";
+import { protectedMutation, serverFetch, serverMutation } from "../core/server";
 
 export const userStatusToggle = async (userId, status) => {
-    return serverMutation(`/api/users/status?userId=${userId}&status=${status}`, null, 'PATCH');
+    const {data} = await authClient.token()
+     const token = `Bearer ${data.token}`
+    return protectedMutation(`/api/users/status?userId=${userId}&status=${status}`, null,token, 'PATCH')
 };
 export const changeIsPremium = async (userId, isPremium) => {
     return serverMutation(`/api/users/premium/${userId}?isPremium=${isPremium}`, null, 'PATCH');

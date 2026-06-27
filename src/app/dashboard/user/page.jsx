@@ -99,7 +99,7 @@ const userPage = async () => {
             </p>
           </div>
           <Link
-            href="/dashboard/user/premium"
+            href="/premium"
             className="shrink-0 rounded-xl bg-[#E85D3D] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
           >
             Upgrade Now

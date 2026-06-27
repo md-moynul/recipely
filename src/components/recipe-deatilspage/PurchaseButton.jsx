@@ -8,8 +8,7 @@ export default function PurchaseButton({ recipeId, isPurchased = false, price })
   const [isProcessing, setIsProcessing] = useState(false);
   const [purchased, setPurchased] = useState(isPurchased);
   const [error, setError] = useState("");
-
-  console.log( price,recipeId);
+  
   const handlePurchase = async () => {
     setIsProcessing(true);
     try {
