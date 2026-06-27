@@ -25,7 +25,7 @@ function RoleBadge({ role }) {
     );
 }
 
-export default function ManageUsersTable({ users, onBlockToggle, setCurrentUser,currentUser }) {
+export default function ManageUserTable({ users, onBlockToggle, setCurrentUser,currentUser }) {
     if (!users || users.length === 0) {
         return (
             <div className="mt-10 rounded-2xl border border-dashed border-[#EAE0D3] p-12 text-center dark:border-[#3A332A]">

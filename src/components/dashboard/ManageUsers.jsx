@@ -1,9 +1,8 @@
 "use client";
-
 import { useState } from "react";
-import ManageUsersTable from "./ManageUsersTable";
 import { userStatusToggle } from "@/lib/action/user";
 import { toast } from "react-toastify";
+import ManageUserTable from "./ManageUserTable";
 
 
 export default function ManageUsers({ initialUsers }) {
@@ -34,5 +33,5 @@ export default function ManageUsers({ initialUsers }) {
     }
   };
 
-  return <ManageUsersTable users={users} onBlockToggle={handleBlockToggle} currentUser={currentUser} setCurrentUser={setCurrentUser} />;
+  return <ManageUserTable users={users} onBlockToggle={handleBlockToggle} currentUser={currentUser} setCurrentUser={setCurrentUser} />;
 }
