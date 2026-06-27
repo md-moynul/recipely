@@ -18,3 +18,6 @@ export const getRecipeThisMonth = async (userId) => {
 export const getFeaturedRecipe = async () => {
     return await serverFetch('/api/recipes/featured');
 }
+export const getPopularRecipes = async () => {
+    return await serverFetch('/api/recipes/popular');
+}

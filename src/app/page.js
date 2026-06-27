@@ -1,5 +1,6 @@
 import FeaturedRecipePage from "@/components/home/FeaturedRecipe";
 import HeroSection from "@/components/home/HeroSection";
+import PopularRecipes from "@/components/home/PopularRecipes";
 import Image from "next/image";
 
 export default function Home() {
@@ -7,6 +8,7 @@ export default function Home() {
     <div className=" min-h-screen">
        <HeroSection />
        <FeaturedRecipePage />
+       <PopularRecipes />
     </div>
   );
 }
