@@ -182,18 +182,22 @@ export default function ManageRecipesTable({ recipes }) {
                                                     Featured
                                                 </span>
                                             ) : (
-                                                <span className="bg-green-100 text-green-400 rounded-full px-2.5 py-0.5 text-xs font-medium">
+                                                <span className="rounded-full bg-[#E6F4EA] px-2.5 py-0.5 text-xs font-medium text-[#1E7B3C] dark:bg-[#1E3B2A] dark:text-[#6FCF8E]">
                                                     Regular
                                                 </span>
                                             )}
                                         </Table.Cell>
 
                                         <Table.Cell>
-                                            <div className={`flex items-center justify-end gap-1 rounded-lg border border-transparent p-0.5 transition-colors group-hover:border-[#EAE0D3] dark:group-hover:border-[#3A332A] $`}>
+                                            <div className="flex items-center justify-end gap-1 rounded-lg border border-transparent p-0.5 transition-colors group-hover:border-[#EAE0D3] dark:group-hover:border-[#3A332A]">
                                                 <Button
                                                     size="sm"
                                                     variant="flat"
-                                                    className={`${recipe.isFeatured ? "bg-yellow-50" : "bg-green-50 text-green-400"} rounded-full`}
+                                                    className={`${
+                                                        recipe.isFeatured
+                                                            ? "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300"
+                                                            : "bg-green-50 text-green-600 dark:bg-green-950 dark:text-green-300"
+                                                    } rounded-full`}
                                                     onPress={() =>
                                                         handleFeature(recipe._id, recipe.isFeatured)
                                                     }

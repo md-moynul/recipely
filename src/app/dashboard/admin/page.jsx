@@ -1,5 +1,5 @@
 import OverviewBarChart from "@/components/dashboard/OverviewBarChart";
-import { getAllRecipes } from "@/lib/api/recipe";
+import { getAllRecipes, getAllRecipesUseAdmin } from "@/lib/api/recipe";
 import { getReports } from "@/lib/api/report";
 import { getAllUsers, getPremiumUsers } from "@/lib/api/user";
 import { Person, Book, CreditCard, Flag } from "@gravity-ui/icons";
@@ -24,7 +24,7 @@ function StatCard({ icon: Icon, label, value, accent }) {
 
 const AdminPage = async () => {
   const users = await getAllUsers();
-  const recipes = await getAllRecipes();
+  const recipes = await getAllRecipesUseAdmin();
   const reports = await getReports();
   const premiumUsers = await getPremiumUsers();
 

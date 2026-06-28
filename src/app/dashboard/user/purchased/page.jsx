@@ -57,7 +57,7 @@ const PurchasedPage = async () => {
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="bg-orange-100 ">
+                                <tr className="bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
                                     <th className="px-6 py-5 text-left font-medium">Recipe</th>
                                     <th className="px-6 py-5 text-left font-medium">Purchased On</th>
                                     <th className="px-6 py-5 text-left font-medium">Amount</th>

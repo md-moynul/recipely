@@ -9,6 +9,10 @@ export const getRecipeByRecipeId = async (recipeId) => {
 }
 export const getAllRecipes = async (page) => {
     return await serverFetch(`/api/recipes?page=${page}`);
+} 
+export const getAllRecipesUseAdmin = async () => {
+    const token = await getServerToken()    
+    return await protectedFetch(`/api/recipes/admin`,token);
 }
 export const getRecipeByUserEmail = async (userEmail) => {
     const token = await getServerToken()

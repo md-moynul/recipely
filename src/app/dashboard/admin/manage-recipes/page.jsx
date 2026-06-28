@@ -1,8 +1,8 @@
-import { getAllRecipes } from "@/lib/api/recipe";
+import {  getAllRecipesUseAdmin } from "@/lib/api/recipe";
 import ManageRecipesTable from "./ManageRecipesTable";
 
 const ManageRecipePage = async () => {
-  const result = await getAllRecipes();
+  const result = await getAllRecipesUseAdmin();
 
   const recipes = Array.isArray(result)
     ? result

@@ -102,7 +102,7 @@ export default function FeaturedRecipesSection({ recipes }) {
           variants={container}
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
         >
-          {recipes.slice(0, 4).map((recipe) => (
+          {recipes.map((recipe) => (
             <FeaturedCard key={recipe._id ?? recipe.id} recipe={recipe} />
           ))}
         </motion.div>

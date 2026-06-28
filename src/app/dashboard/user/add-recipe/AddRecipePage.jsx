@@ -24,13 +24,14 @@ const CATEGORIES = ["Breakfast", "Lunch", "Dinner", "Dessert", "Snack", "Appetiz
 const CUISINES = ["Bengali", "Indian", "Italian", "Chinese", "Mexican", "Thai", "Continental"];
 const DIFFICULTIES = ["Easy", "Medium", "Hard"];
 
-const fieldBg = "bg-[#FFF9F2]";
-const fieldClass = `rounded-xl border-[#EAE0D3] ${fieldBg} text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20`;
+const fieldBg = "bg-[#FFF9F2] dark:bg-background";
+const fieldClass = `rounded-xl border-[#EAE0D3] dark:border-[#3A332A] ${fieldBg} text-[#2B2420] dark:text-[#F4EDE4] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20`;
+const labelClass = "text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]";
 
 export default function AddRecipePage({ user }) {
   const router = useRouter();
   const formRef = useRef(null); // Reference to pass a strict HTMLFormElement to FormData
-  
+
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -106,7 +107,7 @@ export default function AddRecipePage({ user }) {
 
       if (!formRef.current) return;
       const formData = new FormData(formRef.current);
-      
+
       const payload = {
         recipeName: formData.get("recipeName"),
         recipeImage: imageUrl,
@@ -129,10 +130,10 @@ export default function AddRecipePage({ user }) {
       };
 
       const result = await addRecipe(payload);
-      
+
       if (result?.insertedId) {
         toast.success(`${payload.recipeName} added successfully!`);
-        
+
         // Reset inputs on absolute HTML element reference
         formRef.current.reset();
         setImageFile(null);
@@ -155,12 +156,12 @@ export default function AddRecipePage({ user }) {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-10">
-      <Card className="w-full border border-[#EAE0D3] bg-white p-6 sm:p-8">
+      <Card className="w-full border border-[#EAE0D3] bg-white p-6 dark:border-[#3A332A] dark:bg-[#252019] sm:p-8">
         <Card.Header>
-          <Card.Title className="text-2xl font-semibold text-[#2B2420]">
+          <Card.Title className="text-2xl font-semibold text-[#2B2420] dark:text-[#F4EDE4]">
             Add a Recipe
           </Card.Title>
-          <Card.Description className="text-sm text-[#6B6155]">
+          <Card.Description className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
             Share something worth cooking again.
           </Card.Description>
         </Card.Header>
@@ -169,18 +170,17 @@ export default function AddRecipePage({ user }) {
           <Form ref={formRef} className="mt-2 flex flex-col gap-6" onSubmit={handleSubmit}>
             {/* Recipe Name */}
             <TextField name="recipeName" isRequired className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420]">Recipe Name</Label>
               <Input placeholder="e.g. Spicy Beef Bhuna" className={fieldClass} />
               <FieldError className="text-xs text-[#D64545]" />
             </TextField>
 
             {/* Image Upload */}
             <div className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420]">Recipe Image</Label>
+              <Label className={labelClass}>Recipe Image</Label>
 
               <label
                 htmlFor="recipe-image"
-                className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#EAE0D3] ${fieldBg} p-6 text-center transition-colors hover:border-[#E85D3D]`}
+                className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[#EAE0D3] dark:border-[#3A332A] ${fieldBg} p-6 text-center transition-colors hover:border-[#E85D3D]`}
               >
                 {imagePreview ? (
                   <div className="relative h-40 w-full overflow-hidden rounded-lg">
@@ -189,7 +189,9 @@ export default function AddRecipePage({ user }) {
                 ) : (
                   <>
                     <FolderArrowUp width={22} height={22} className="text-[#9C9388]" />
-                    <span className="text-sm text-[#6B6155]">Click to upload an image</span>
+                    <span className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+                      Click to upload an image
+                    </span>
                     <span className="text-xs text-[#9C9388]">PNG or JPG, up to 5MB</span>
                   </>
                 )}
@@ -201,21 +203,27 @@ export default function AddRecipePage({ user }) {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              {isUploading && <p className="text-xs text-[#9C9388]">Uploading image…</p>}
+              {isUploading && (
+                <p className="text-xs text-[#9C9388]">Uploading image…</p>
+              )}
             </div>
 
             {/* Category + Cuisine */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Select name="category" isRequired placeholder="Select category" className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420]">Category</Label>
+                <Label className={labelClass}>Category</Label>
                 <Select.Trigger className={fieldClass}>
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
-                <Select.Popover>
+                <Select.Popover className="bg-white dark:bg-[#252019]">
                   <ListBox>
                     {CATEGORIES.map((cat) => (
-                      <ListBox.Item key={cat} id={cat}>
+                      <ListBox.Item
+                        key={cat}
+                        id={cat}
+                        className="text-[#2B2420] dark:text-[#F4EDE4]"
+                      >
                         <Label>{cat}</Label>
                       </ListBox.Item>
                     ))}
@@ -224,15 +232,19 @@ export default function AddRecipePage({ user }) {
               </Select>
 
               <Select name="cuisineType" isRequired placeholder="Select cuisine" className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420]">Cuisine Type</Label>
+                <Label className={labelClass}>Cuisine Type</Label>
                 <Select.Trigger className={fieldClass}>
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
-                <Select.Popover>
+                <Select.Popover className="bg-white dark:bg-[#252019]">
                   <ListBox>
                     {CUISINES.map((cuisine) => (
-                      <ListBox.Item key={cuisine} id={cuisine}>
+                      <ListBox.Item
+                        key={cuisine}
+                        id={cuisine}
+                        className="text-[#2B2420] dark:text-[#F4EDE4]"
+                      >
                         <Label>{cuisine}</Label>
                       </ListBox.Item>
                     ))}
@@ -244,15 +256,19 @@ export default function AddRecipePage({ user }) {
             {/* Difficulty + Prep time */}
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <Select name="difficultyLevel" isRequired placeholder="Select difficulty" className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420]">Difficulty Level</Label>
+                <Label className={labelClass}>Difficulty Level</Label>
                 <Select.Trigger className={fieldClass}>
                   <Select.Value />
                   <Select.Indicator />
                 </Select.Trigger>
-                <Select.Popover>
+                <Select.Popover className="bg-white dark:bg-[#252019]">
                   <ListBox>
                     {DIFFICULTIES.map((level) => (
-                      <ListBox.Item key={level} id={level}>
+                      <ListBox.Item
+                        key={level}
+                        id={level}
+                        className="text-[#2B2420] dark:text-[#F4EDE4]"
+                      >
                         <Label>{level}</Label>
                       </ListBox.Item>
                     ))}
@@ -261,7 +277,7 @@ export default function AddRecipePage({ user }) {
               </Select>
 
               <TextField name="preparationTime" isRequired className="flex flex-col gap-1.5">
-                <Label className="text-sm font-medium text-[#2B2420]">Preparation Time</Label>
+                <Label className={labelClass}>Preparation Time</Label>
                 <InputGroup>
                   <InputGroup.Prefix className={`${fieldBg} text-[#9C9388]`}>
                     <Clock width={16} height={16} />
@@ -274,14 +290,14 @@ export default function AddRecipePage({ user }) {
 
             {/* Price (Added Field) */}
             <TextField name="price" isRequired className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420]">Estimated Price</Label>
+              <Label className={labelClass}>Estimated Price</Label>
               <Input placeholder="e.g. $15.00" className={fieldClass} />
               <FieldError className="text-xs text-[#D64545]" />
             </TextField>
 
             {/* Ingredients - dynamic list */}
             <div className="flex flex-col gap-2">
-              <Label className="text-sm font-medium text-[#2B2420]">Ingredients</Label>
+              <Label className={labelClass}>Ingredients</Label>
 
               <div className="flex flex-col gap-2.5">
                 {ingredients.map((ingredient, index) => (
@@ -297,7 +313,7 @@ export default function AddRecipePage({ user }) {
                       onClick={() => removeIngredientField(index)}
                       disabled={ingredients.length === 1}
                       aria-label="Remove ingredient"
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#EAE0D3] text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#EAE0D3] text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] disabled:cursor-not-allowed disabled:opacity-40 dark:border-[#3A332A] dark:hover:bg-[#1A1714]"
                     >
                       <TrashBin width={16} height={16} />
                     </button>
@@ -308,7 +324,7 @@ export default function AddRecipePage({ user }) {
               <button
                 type="button"
                 onClick={addIngredientField}
-                className="mt-1 flex items-center gap-1.5 self-start rounded-lg px-2 py-1 text-sm font-medium text-[#E85D3D] transition-colors hover:bg-[#FBF1E6]"
+                className="mt-1 flex items-center gap-1.5 self-start rounded-lg px-2 py-1 text-sm font-medium text-[#E85D3D] transition-colors hover:bg-[#FBF1E6] dark:hover:bg-[#1A1714]"
               >
                 <Plus width={16} height={16} />
                 Add ingredient
@@ -317,7 +333,7 @@ export default function AddRecipePage({ user }) {
 
             {/* Instructions */}
             <TextField name="instructions" isRequired className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420]">Instructions</Label>
+              <Label className={labelClass}>Instructions</Label>
               <TextArea
                 rows={6}
                 placeholder="Write the steps to make this recipe..."

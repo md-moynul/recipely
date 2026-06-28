@@ -128,7 +128,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
                       value={details}
                       onChange={(e) => setDetails(e.target.value)}
                       placeholder="Anything else we should know?"
-                      className="bg-[#FFF9F2]"
+                      className="bg-[#FFF9F2] dark:bg-[#1F1B16]"
                     />
                   </TextField>
                 </AlertDialog.Body>
@@ -136,7 +136,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
                 <AlertDialog.Footer>
                   <Button
                     slot="close"
-                    className="bg-white text-[#2B2420] hover:bg-[#FBF1E6] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
+                    className=" text-[#2B2420] hover:bg-[#FBF1E6] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
                     isDisabled={isSubmitting}
                   >
                     Cancel
