@@ -17,9 +17,6 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-// Standardizing input token styling across light and dark modes
-const inputStyles = "bg-[#FFF9F2] dark:bg-[#1A1714] border-[#EAE0D3] dark:border-[#3A332A] text-[#2B2420] dark:text-[#F4EDE4] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20";
-
 export default function LoginPage({ redirectBy = "/" }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +65,7 @@ export default function LoginPage({ redirectBy = "/" }) {
   };
 
   return (
-    <main className="grid min-h-screen grid-cols-1 bg-[#FFF9F2] dark:bg-[#1A1714] lg:grid-cols-[1fr_1fr]">
+    <main className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr_1fr]">
       {/* LEFT — Form */}
       <section className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-20">
         <div className="mx-auto w-full max-w-md">
@@ -76,7 +73,7 @@ export default function LoginPage({ redirectBy = "/" }) {
           <h1 className="text-[2rem] font-semibold leading-tight text-[#2B2420] dark:text-[#F4EDE4]">
             Welcome back
           </h1>
-          <p className="mt-2 text-[15px] text-[#6B6155] dark:text-[#B8AFA2]">
+          <p className="mt-2 text-[15px] text-[#6B6155] dark:text-[#F4EDE4]">
             Log in to save recipes, follow cooks, and pick up right where you left off.
           </p>
 
@@ -86,11 +83,11 @@ export default function LoginPage({ redirectBy = "/" }) {
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Email</Label>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
+                  <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="you@example.com"
-                  className={inputStyles}
+                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -114,17 +111,17 @@ export default function LoginPage({ redirectBy = "/" }) {
               </div>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <Lock width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
+                  <Lock width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Enter your password"
-                  className={inputStyles}
+                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
                 />
                 <InputGroup.Suffix>
                   <button
                     type="button"
                     onClick={() => setIsPasswordVisible((v) => !v)}
-                    className="text-[#9C9388] hover:text-[#6B6155] dark:text-[#B8AFA2] dark:hover:text-[#F4EDE4]"
+                    className="text-[#9C9388] hover:text-[#6B6155]"
                     aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                   >
                     {isPasswordVisible ? (
@@ -140,10 +137,10 @@ export default function LoginPage({ redirectBy = "/" }) {
 
             <Checkbox name="remember" className="mt-1">
               <Checkbox.Content>
-                <Checkbox.Control className="border-[#EAE0D3] dark:border-[#3A332A] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
+                <Checkbox.Control className="border-[#EAE0D3] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
                   <Checkbox.Indicator />
                 </Checkbox.Control>
-                <Label className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">Remember me</Label>
+                <Label className="text-sm text-[#6B6155] dark:text-[#F4EDE4]">Remember me</Label>
               </Checkbox.Content>
             </Checkbox>
 
@@ -158,18 +155,18 @@ export default function LoginPage({ redirectBy = "/" }) {
 
           {/* Divider */}
           <div className="mt-7 flex items-center gap-3">
-            <span className="h-px flex-1 bg-[#EAE0D3] dark:bg-[#3A332A]" />
-            <span className="text-xs font-medium uppercase tracking-wide text-[#9C9388] dark:text-[#B8AFA2]">
+            <span className="h-px flex-1 bg-[#EAE0D3]" />
+            <span className="text-xs font-medium uppercase tracking-wide text-[#9C9388] dark:text-[#F4EDE4]">
               or continue with
             </span>
-            <span className="h-px flex-1 bg-[#EAE0D3] dark:bg-[#3A332A]" />
+            <span className="h-px flex-1 bg-[#EAE0D3]" />
           </div>
 
           {/* Google login */}
           <Button
             type="button"
             onClick={handleGoogleLogin}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6] dark:border-[#3A332A] dark:bg-[#252019] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6]"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
               <path
@@ -193,7 +190,7 @@ export default function LoginPage({ redirectBy = "/" }) {
           </Button>
 
           {/* Footer link */}
-          <p className="mt-8 text-center text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+          <p className="mt-8 text-center text-sm text-[#6B6155] dark:text-[#F4EDE4]">
             Don&apos;t have an account?{" "}
             <Link
               href={`/auth/register${redirectBy !== "/" ? `?redirectBy=${redirectBy}` : ""}`}
@@ -212,10 +209,10 @@ export default function LoginPage({ redirectBy = "/" }) {
           alt="Fresh vegetables sizzling in a wok"
           fill
           priority
-          className="object-cover opacity-90 dark:opacity-75"
+          className="object-cover opacity-90"
         />
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2B2420]/50 px-12 text-center backdrop-blur-[2px]">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2B2420]/50 px-12 text-center">
           <div className="max-w-md text-[1.1rem] leading-relaxed text-white/90">
             <p className="mb-3 text-[1.75rem] font-medium leading-snug text-white">
               Every recipe worth keeping, in one place.

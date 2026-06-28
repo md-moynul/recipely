@@ -7,7 +7,6 @@ import {
   Button,
   Checkbox,
   Form,
-  Input,
   InputGroup,
   Label,
   TextField,
@@ -18,8 +17,9 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-// Standardizing input token styling across light and dark modes
-const inputStyles = "bg-[#FFF9F2] dark:bg-[#1A1714] border-[#EAE0D3] dark:border-[#3A332A] text-[#2B2420] dark:text-[#F4EDE4] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20";
+// Apply styles directly to the InputGroup container instead of the inner transparent input element
+const inputGroupStyles = "bg-[#FFF9F2] dark:bg-[#1A1714] border-[#EAE0D3] dark:border-[#3A332A] focus-within:border-[#E85D3D] focus-within:ring-2 focus-within:ring-[#E85D3D]/20 transition-all";
+const inputFieldStyles = "text-[#2B2420] dark:text-[#F4EDE4] placeholder:text-[#9C9388]";
 
 export default function RegisterPage({ redirectBy = "/" }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -72,8 +72,8 @@ export default function RegisterPage({ redirectBy = "/" }) {
   };
 
   return (
-    <main className="grid min-h-screen grid-cols-1 bg-[#FFF9F2] dark:bg-[#1A1714] lg:grid-cols-[1fr_1fr]">
-      {/* LEFT — Visual panel (Flipped position to mirror Login, or keep as right block variant) */}
+    <main className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr_1fr]">
+      {/* LEFT — Visual panel */}
       <section className="relative hidden overflow-hidden bg-[#2B2420] lg:block">
         <Image
           src="/cooking-image2.jpg"
@@ -112,14 +112,14 @@ export default function RegisterPage({ redirectBy = "/" }) {
           <Form className="mt-8 flex flex-col gap-5" onSubmit={handleSubmit}>
             {/* Full Name Field */}
             <TextField name="name" type="text" isRequired className="flex flex-col gap-1.5">
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Full name</Label>
+              <Label >Full name</Label>
               <InputGroup>
                 <InputGroup.Prefix>
                   <Person width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Enter your full name"
-                  className={inputStyles}
+                  className={inputFieldStyles}
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -130,26 +130,25 @@ export default function RegisterPage({ redirectBy = "/" }) {
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Email</Label>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
+                  <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="you@example.com"
-                  className={inputStyles}
+                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
             </TextField>
-
             {/* Image URL Field */}
             <TextField name="imageUrl" type="url" isRequired className="flex flex-col gap-1.5">
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Avatar URL</Label>
-              <InputGroup>
+              <InputGroup >
                 <InputGroup.Prefix>
-                  <span className="px-1 text-xs font-semibold text-[#9C9388] dark:text-[#B8AFA2]">URL</span>
+                  <span >URL</span>
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="https://example.com/avatar.jpg"
-                  className={inputStyles}
+                  className={inputFieldStyles}
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -163,14 +162,14 @@ export default function RegisterPage({ redirectBy = "/" }) {
               minLength={6}
               className="flex flex-col gap-1.5"
             >
-              <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Password</Label>
-              <InputGroup>
+              <Label className="text-sm font-medium">Password</Label>
+              <InputGroup >
                 <InputGroup.Prefix>
-                  <Lock width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
+                  <Lock width={16} height={16} className="" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Min. 6 characters"
-                  className={inputStyles}
+                  className={inputFieldStyles}
                 />
                 <InputGroup.Suffix>
                   <button
