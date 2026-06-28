@@ -74,6 +74,11 @@ export default function DashboardSidebar({ user }) {
       href: "/dashboard/admin/reports",
     },
     {
+      icon: CreditCard,
+      label: "Transactions",
+      href: "/dashboard/admin/transactions",
+    },
+    {
       icon: Person,
       label: "Profile",
       href: "/dashboard/profile",
@@ -95,15 +100,15 @@ export default function DashboardSidebar({ user }) {
             <button
               type="button"
               className={`w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-medium transition-all text-left relative group ${isActive
-                  ? "bg-[#E85D3D]/10 text-[#E85D3D] cursor-pointer"
-                  : "text-[#6B6155] hover:text-[#2B2420] hover:bg-[#FBF1E6] cursor-pointer dark:text-[#B8AFA2] dark:hover:text-[#F4EDE4] dark:hover:bg-[#252019]"
+                ? "bg-[#E85D3D]/10 text-[#E85D3D] cursor-pointer"
+                : "text-[#6B6155] hover:text-[#2B2420] hover:bg-[#FBF1E6] cursor-pointer dark:text-[#B8AFA2] dark:hover:text-[#F4EDE4] dark:hover:bg-[#252019]"
                 }`}
             >
               <div className="flex items-center gap-3.5">
                 <IconComponent
                   className={`w-5 h-5 ${isActive
-                      ? "text-[#E85D3D]"
-                      : "text-[#9C9388] group-hover:text-[#6B6155] dark:text-[#7A7266] dark:group-hover:text-[#B8AFA2]"
+                    ? "text-[#E85D3D]"
+                    : "text-[#9C9388] group-hover:text-[#6B6155] dark:text-[#7A7266] dark:group-hover:text-[#B8AFA2]"
                     }`}
                 />
                 <span>{item.label}</span>
