@@ -18,6 +18,9 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
+// Standardizing input token styling across light and dark modes
+const inputStyles = "bg-[#FFF9F2] dark:bg-[#1A1714] border-[#EAE0D3] dark:border-[#3A332A] text-[#2B2420] dark:text-[#F4EDE4] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20";
+
 export default function RegisterPage({ redirectBy = "/" }) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,7 +50,7 @@ export default function RegisterPage({ redirectBy = "/" }) {
       }
       if (data) {
         toast.success("Registration successful!");
-        router.push(redirectBy); // Redirect after successful registration
+        router.push(redirectBy);
       }
     } catch (err) {
       console.error("Unexpected error during registration:", err);
@@ -69,19 +72,19 @@ export default function RegisterPage({ redirectBy = "/" }) {
   };
 
   return (
-    <main className="grid min-h-screen grid-cols-1 lg:grid-cols-[1fr_1fr]">
-      {/* RIGHT — Visual panel */}
+    <main className="grid min-h-screen grid-cols-1 bg-[#FFF9F2] dark:bg-[#1A1714] lg:grid-cols-[1fr_1fr]">
+      {/* LEFT — Visual panel (Flipped position to mirror Login, or keep as right block variant) */}
       <section className="relative hidden overflow-hidden bg-[#2B2420] lg:block">
         <Image
           src="/cooking-image2.jpg"
           alt="Fresh vegetables sizzling in a wok"
           fill
           priority
-          className="object-cover opacity-90"
+          className="object-cover opacity-90 dark:opacity-75"
         />
         <div className="absolute inset-0 shadow-[inset_0_0_120px_60px_rgba(0,0,0,0.55)]" />
 
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2B2420]/50 px-12 text-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2B2420]/50 px-12 text-center backdrop-blur-[2px]">
           <div className="max-w-md text-[1.1rem] leading-relaxed text-white/90">
             <p className="mb-3 text-[1.65rem] font-medium leading-snug text-white">
               Every recipe worth keeping, in one place.
@@ -94,14 +97,14 @@ export default function RegisterPage({ redirectBy = "/" }) {
         </div>
       </section>
 
-      {/* LEFT — Form */}
+      {/* RIGHT — Form */}
       <section className="flex flex-col justify-center px-6 py-12 sm:px-12 lg:px-20">
         <div className="mx-auto w-full max-w-md">
           {/* Heading */}
           <h1 className="text-[2rem] font-semibold leading-tight text-[#2B2420] dark:text-[#F4EDE4]">
             Get started
           </h1>
-          <p className="mt-2 text-[15px] text-[#6B6155] dark:text-[#F4EDE4]">
+          <p className="mt-2 text-[15px] text-[#6B6155] dark:text-[#B8AFA2]">
             Create your account to save recipes and connect with cooks.
           </p>
 
@@ -112,11 +115,11 @@ export default function RegisterPage({ redirectBy = "/" }) {
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Full name</Label>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <Person width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
+                  <Person width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Enter your full name"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className={inputStyles}
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -127,11 +130,11 @@ export default function RegisterPage({ redirectBy = "/" }) {
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Email</Label>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
+                  <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="you@example.com"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className={inputStyles}
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -142,11 +145,11 @@ export default function RegisterPage({ redirectBy = "/" }) {
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Avatar URL</Label>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <span className="px-1 text-xs font-semibold text-[#9C9388] dark:text-[#F4EDE4]">URL</span>
+                  <span className="px-1 text-xs font-semibold text-[#9C9388] dark:text-[#B8AFA2]">URL</span>
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="https://example.com/avatar.jpg"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className={inputStyles}
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -163,17 +166,17 @@ export default function RegisterPage({ redirectBy = "/" }) {
               <Label className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">Password</Label>
               <InputGroup>
                 <InputGroup.Prefix>
-                  <Lock width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
+                  <Lock width={16} height={16} className="text-[#9C9388] dark:text-[#B8AFA2]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Min. 6 characters"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className={inputStyles}
                 />
                 <InputGroup.Suffix>
                   <button
                     type="button"
                     onClick={() => setIsPasswordVisible((v) => !v)}
-                    className="text-[#9C9388] hover:text-[#6B6155]"
+                    className="text-[#9C9388] hover:text-[#6B6155] dark:text-[#B8AFA2] dark:hover:text-[#F4EDE4]"
                     aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                   >
                     {isPasswordVisible ? (
@@ -190,10 +193,10 @@ export default function RegisterPage({ redirectBy = "/" }) {
             {/* Terms Checkbox */}
             <Checkbox name="terms" isRequired className="mt-1">
               <Checkbox.Content>
-                <Checkbox.Control className="border border-[#EAE0D3] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
+                <Checkbox.Control className="border border-[#EAE0D3] dark:border-[#3A332A] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
                   <Checkbox.Indicator />
                 </Checkbox.Control>
-                <Label className="text-sm text-[#6B6155] dark:text-[#F4EDE4]">
+                <Label className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
                   I agree to the{" "}
                   <Link href="/terms" className="text-[#E85D3D] hover:underline">
                     Terms of Service
@@ -215,18 +218,18 @@ export default function RegisterPage({ redirectBy = "/" }) {
 
           {/* Divider */}
           <div className="mt-7 flex items-center gap-3">
-            <span className="h-px flex-1 bg-[#EAE0D3]" />
-            <span className="text-xs font-medium uppercase tracking-wide text-[#9C9388] dark:text-[#F4EDE4]">
+            <span className="h-px flex-1 bg-[#EAE0D3] dark:bg-[#3A332A]" />
+            <span className="text-xs font-medium uppercase tracking-wide text-[#9C9388] dark:text-[#B8AFA2]">
               or
             </span>
-            <span className="h-px flex-1 bg-[#EAE0D3]" />
+            <span className="h-px flex-1 bg-[#EAE0D3] dark:bg-[#3A332A]" />
           </div>
 
           {/* Google signup */}
           <Button
             type="button"
             onClick={handleGoogleSignup}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6]"
+            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6] dark:border-[#3A332A] dark:bg-[#252019] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
               <path
@@ -250,7 +253,7 @@ export default function RegisterPage({ redirectBy = "/" }) {
           </Button>
 
           {/* Footer link */}
-          <p className="mt-8 text-center text-sm text-[#6B6155] dark:text-[#F4EDE4]">
+          <p className="mt-8 text-center text-sm text-[#6B6155] dark:text-[#B8AFA2]">
             Already have an account?{" "}
             <Link
               href={`/auth/login${redirectBy !== "/" ? `?redirectBy=${redirectBy}` : ""}`}
