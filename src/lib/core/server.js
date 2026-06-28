@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const serverFetch = async (path) => {
@@ -26,6 +28,12 @@ export const protectedMutation = async (path, data, token, method = 'POST') => {
         // Dynamically spreads the body property only if data is truthy
         ...(data && { body: JSON.stringify(data) }),
     });
+    if (res.status === 401) {
+        redirect('/auth/login');
+    }
+    if (res.status === 403) {
+        redirect('/unauthorized');
+    }
     return res.json();
 };
 export const  protectedFetch = async (path,  token) => {
@@ -34,5 +42,11 @@ export const  protectedFetch = async (path,  token) => {
             'authorization': token
         },
     });
+    if (res.status === 401) {
+        redirect('/auth/login');
+    }
+    if (res.status === 403) {
+        redirect('/unauthorized');
+    }
     return res.json();
 };

@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
 import { ToastContainer } from "react-toastify";
+import { Providers } from "@/components/provider/Providers";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -18,14 +19,18 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      data-theme="light"
-      className={`${jakarta.variable} light h-full scroll-smooth`}
+      suppressHydrationWarning
+      className={`${jakarta.variable}  h-full `}
     >
-      <body className="bg-[#FFF9F2]   dark:bg-[#1A1714] text-foreground">
-        <Navbar />
-        <main>{children}</main>
-         <ToastContainer />
-        <Footer />
+      <body className="bg-[#FFF9F2]   dark:bg-[#1A1714] text-foreground transition-all duration-500 ">
+        <Providers>
+          <Navbar />
+          <main>
+            {children}
+          </main>
+          <ToastContainer />
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

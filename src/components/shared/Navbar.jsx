@@ -9,6 +9,8 @@ import { authClient } from "@/lib/auth-client";
 
 // Import the icon component directly
 import { ArrowRightFromSquare } from "@gravity-ui/icons";
+import ThemeSwitch from "../ThemeSwitch";
+
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -130,8 +132,9 @@ export default function Navbar() {
         </div>
 
         <ul className="hidden items-center gap-7 md:flex">{navComponent}</ul>
-
+        
         <div className="hidden items-center gap-4 md:flex">
+          <ThemeSwitch />
           {authSections}
         </div>
       </div>
