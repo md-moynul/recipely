@@ -1,39 +1,39 @@
-import { authClient } from "../auth-client"
 import { protectedMutation, serverMutation } from "../core/server"
+import { getClientToken } from "../core/token"
 
 export const addRecipe = async (recipe) => {
-    const { data } = await authClient.token()
-    const token = `Bearer ${data.token}`
+    const token = await getClientToken()
     return protectedMutation('/api/recipes', recipe, token)
 }
 export const updateRecipe = async (recipeId, recipe) => {
-    const { data } = await authClient.token()
-    const token = `Bearer ${data.token}`
+    const token = await getClientToken()
     return protectedMutation(`/api/my-recipe/${recipeId}`, recipe, token, 'PATCH')
 }
 export const deleteRecipe = async (recipeId) => {
-    const { data } = await authClient.token()
-    const token = `Bearer ${data.token}`
+    const token = await getClientToken()
     return protectedMutation(`/api/my-recipe/${recipeId}`, null, token, 'DELETE')
 }
 export const likeRecipe = async (recipeId, userId) => {
-    return serverMutation(`/api/my-recipe/${recipeId}/like?userId=${userId}`, null, 'PATCH')
+    const token = await getClientToken()
+    return protectedMutation(`/api/my-recipe/${recipeId}/like?userId=${userId}`, null, token, 'PATCH')
 }
-export const unlikeRecipe = (recipeId, userId) => {
-    return serverMutation(`/api/my-recipe/${recipeId}/dislike?userId=${userId}`, null, 'PATCH')
+export const unlikeRecipe = async (recipeId, userId) => {
+    const token = await getClientToken()
+    return protectedMutation(`/api/my-recipe/${recipeId}/dislike?userId=${userId}`, null,token, 'PATCH')
 }
-export const reportRecipe = (report) => {
-    return serverMutation('/api/report', report)
+export const reportRecipe = async (report) => {
+    const token = await getClientToken()
+    return protectedMutation('/api/report', report,token)
 }
 export const addFavorite = async (recipeData) => {
-    const {data} = await authClient.token()
-     const token = `Bearer ${data.token}`
+    const token = await getClientToken()
     return protectedMutation('/api/favorite', recipeData, token)
 }
-export const removeFavorite = (recipeId, userId) => {
-    return serverMutation(`/api/favorite/${recipeId}/${userId}`, null, 'DELETE')
+export const removeFavorite = async (recipeId, userId) => {
+    const token = await getClientToken()
+    return protectedMutation(`/api/favorite/${recipeId}/${userId}`, null,token, 'DELETE')
 }
-export const featureRecipe = (recipeId, isFeatured) => {
-    console.log(recipeId, isFeatured);
-    return serverMutation(`/api/featured/${recipeId}?isFeatured=${isFeatured}`, null, 'PATCH')
+export const featureRecipe = async (recipeId, isFeatured) => {
+    const token = await getClientToken()
+    return protectedMutation(`/api/featured/${recipeId}?isFeatured=${isFeatured}`, null, token, 'PATCH')
 }

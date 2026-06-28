@@ -1,8 +1,7 @@
 import OverviewBarChart from "@/components/dashboard/OverviewBarChart";
-import { getPremiumUsers } from "@/lib/action/user";
 import { getAllRecipes } from "@/lib/api/recipe";
 import { getReports } from "@/lib/api/report";
-import { getAllUsers } from "@/lib/api/user";
+import { getAllUsers, getPremiumUsers } from "@/lib/api/user";
 import { Person, Book, CreditCard, Flag } from "@gravity-ui/icons";
 
 

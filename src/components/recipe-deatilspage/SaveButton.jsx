@@ -19,7 +19,6 @@ export default function SaveButton({ initialIsSaved , recipeId,userId ,userEmail
 
     }
     const result = selected ?await addFavorite(purseData) : await removeFavorite(recipeId,userId);
-    console.log(result);
   if(result.insertedId) {
     toast.success("Recipe saved successfully!");
   }

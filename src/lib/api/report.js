@@ -1,5 +1,7 @@
-import { serverFetch} from "../core/server";
+import { protectedFetch, serverFetch} from "../core/server";
+import { getServerToken } from "../core/server-token";
 
 export const getReports = async () => {
-    return await serverFetch("/api/reports");
+    const token = await getServerToken();
+    return await protectedFetch("/api/reports", token);
 };

@@ -51,7 +51,7 @@ export default function ReportDialog({ recipeId, recipeName }) {
       };
       const result = await reportRecipe(report);
       if(result.insertedId) {
-        toast.error("Report submitted successfully!");
+        toast.success("Report submitted successfully!");
         resetForm();
         close();
       }

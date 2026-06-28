@@ -12,30 +12,35 @@ export default async function Success({ searchParams }) {
   if (!session_id) {
     throw new Error("Please provide a valid session_id (`cs_test_...`)");
   }
+  const [session, user] = await Promise.all([
+    stripe.checkout.sessions.retrieve(session_id, {
+      expand: ["line_items", "payment_intent"],
+    }),
+    getServerSession()
+  ]);
 
-  const session = await stripe.checkout.sessions.retrieve(session_id, {
-    expand: ["line_items", "payment_intent"],
-  });
-
-  const { status, customer_details, amount_total, currency, metadata } =
-    session;
+  const { status, customer_details, amount_total, currency, metadata } = session;
   const customerEmail = customer_details?.email;
-  const user = await getServerSession()
+
   if (status === "open") {
     return redirect("/");
   }
 
   if (status === "complete") {
-    const purchaseType = metadata?.purchaseType ?? "premium";
-    if (purchaseType === "premium") {
-        await changeIsPremium(user?.id, true);
+  
+    if (!user || user.id !== metadata?.userId) {
+      return redirect("/login?error=UnauthorizedPaymentAccess");
     }
-    // Persist the transaction. Safe to call repeatedly if this page is
-    // revisited — make savePaymentTransaction upsert on transactionId
-    // (Stripe session/payment_intent id) so refreshing doesn't duplicate rows.
+
+    const purchaseType = metadata?.purchaseType ?? "premium";
+    
+    if (purchaseType === "premium") {
+        await changeIsPremium(user.id, true);
+    }
+
     await postPayment({
       userEmail: customerEmail,
-      userId: metadata?.userId ?? null,
+      userId: user.id,
       purchaseType,
       recipeId: purchaseType === "recipe" ? metadata?.recipeId ?? null : null,
       planId: purchaseType === "premium" ? metadata?.planId ?? null : null,
@@ -85,10 +90,7 @@ export default async function Success({ searchParams }) {
 
           <p className="mt-6 text-xs text-[#9C9388]">
             Questions? Email{" "}
-            <a
-              href="mailto:orders@recipely.com"
-              className="text-[#E85D3D] hover:underline"
-            >
+            <a href="mailto:orders@recipely.com" className="text-[#E85D3D] hover:underline">
               orders@recipely.com
             </a>
           </p>
@@ -97,13 +99,11 @@ export default async function Success({ searchParams }) {
     );
   }
 
-  // Fallback for any other status (e.g. expired)
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
       <section className="w-full max-w-md rounded-3xl border border-[#EAE0D3] bg-white p-8 text-center dark:border-[#3A332A] dark:bg-[#252019]">
         <p className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
-          We couldn&apos;t confirm this payment. If you were charged, please
-          contact support.
+          We couldn&apos;t confirm this payment. If you were charged, please contact support.
         </p>
       </section>
     </main>

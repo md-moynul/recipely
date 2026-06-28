@@ -1,11 +1,11 @@
-import { headers } from "next/headers";
-import { auth } from "../auth";
-import { protectedFetch, serverFetch } from "../core/server"
+import {  protectedFetch } from "../core/server"
+import { getServerToken } from "../core/server-token";
 
 export async function getAllUsers() {
-    const {token} = await auth.api.getToken({
-        headers: await headers()
-    })
-    const fullToken = `Bearer ${token}`
-    return await protectedFetch("/api/users/all",fullToken);
+    const token = await getServerToken();
+    return await protectedFetch("/api/users/all",token);
 }
+export const getPremiumUsers = async () => {
+    const token = await getServerToken();
+    return await protectedFetch("/api/users/premium",token);
+};
