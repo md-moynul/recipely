@@ -87,7 +87,7 @@ export default function LoginPage({ redirectBy = "/" }) {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="you@example.com"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className=""
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -115,7 +115,7 @@ export default function LoginPage({ redirectBy = "/" }) {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Enter your password"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  className=""
                 />
                 <InputGroup.Suffix>
                   <button
@@ -135,10 +135,10 @@ export default function LoginPage({ redirectBy = "/" }) {
               <FieldError className="text-xs text-[#D64545]" />
             </TextField>
 
-            <Checkbox name="remember" className="mt-1">
+            <Checkbox name="remember" className="">
               <Checkbox.Content>
-                <Checkbox.Control className="border-[#EAE0D3] data-[selected=true]:border-[#E85D3D] data-[selected=true]:bg-[#E85D3D]">
-                  <Checkbox.Indicator />
+                <Checkbox.Control className="border-2">
+                  <Checkbox.Indicator className="" />
                 </Checkbox.Control>
                 <Label className="text-sm text-[#6B6155] dark:text-[#F4EDE4]">Remember me</Label>
               </Checkbox.Content>

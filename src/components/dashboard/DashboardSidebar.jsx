@@ -15,9 +15,9 @@ import {
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 
-export default function DashboardSidebar({ user }) {
+export default function DashboardSidebar({ user ,isPremium }) {
   const pathname = usePathname();
-  const isPremium = user?.isPremium;
+  
   const userNavItems = [
     {
       icon: LayoutCellsLarge,

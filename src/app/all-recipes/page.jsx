@@ -26,7 +26,7 @@ const AllRecipesPage = async ({ searchParams }) => {
           </p>
         </div>
 
-        <RecipeFilterBar paramsObj={paramsObj} />
+        <RecipeFilterBar paramsObj={paramsObj} page={page} />
 
         <div className="mt-10 flex flex-col items-center rounded-2xl border border-dashed border-[#EAE0D3] py-16 text-center dark:border-[#3A332A]">
           <div className="flex h-14 w-14 items-center justify-center rounded-full">
@@ -59,7 +59,7 @@ const AllRecipesPage = async ({ searchParams }) => {
         </span>
       </div>
 
-      <RecipeFilterBar paramsObj={paramsObj} />
+      <RecipeFilterBar paramsObj={paramsObj} page={page} />
 
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {recipes.map((recipe) => (

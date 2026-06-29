@@ -43,7 +43,7 @@ function MultiSelectFilter({ label, placeholder, options, value, onChange }) {
   );
 }
 
-export default function RecipeFilterBar({ paramsObj }) {
+export default function RecipeFilterBar({ paramsObj ,page}) {
   
   const [searchQuery, setSearchQuery] = useState(paramsObj.search);
   const [category, setCategory] = useState(paramsObj.category || "All");
@@ -56,10 +56,10 @@ export default function RecipeFilterBar({ paramsObj }) {
     if (cuisineType !== 'All') sp.set("cuisineType", cuisineType);
     if (difficultyLevel !== 'All') sp.set("difficultyLevel", difficultyLevel);
     if (searchQuery) sp.set("search", searchQuery);
-
+    if (page) sp.set("page", page);
     const path = `/all-recipes?${sp.toString()}`;
     router.push(path);
-  }, [searchQuery, category, cuisineType, difficultyLevel, router]);
+  }, [searchQuery, category, cuisineType, difficultyLevel, router,page]);
 
   return (
     <div className="mb-6 grid grid-cols-1 gap-4 rounded-2xl border border-[#EAE0D3] bg-white p-4 dark:border-[#3A332A] dark:bg-[#252019] sm:grid-cols-2 lg:grid-cols-4">

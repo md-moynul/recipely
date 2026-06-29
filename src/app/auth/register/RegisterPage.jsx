@@ -119,7 +119,7 @@ export default function RegisterPage({ redirectBy = "/" }) {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Enter your full name"
-                  className={inputFieldStyles}
+                 
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -134,7 +134,7 @@ export default function RegisterPage({ redirectBy = "/" }) {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="you@example.com"
-                  className="border-[#EAE0D3] text-[#2B2420] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20"
+                  
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -148,7 +148,7 @@ export default function RegisterPage({ redirectBy = "/" }) {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="https://example.com/avatar.jpg"
-                  className={inputFieldStyles}
+                  
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -169,7 +169,7 @@ export default function RegisterPage({ redirectBy = "/" }) {
                 </InputGroup.Prefix>
                 <InputGroup.Input
                   placeholder="Min. 6 characters"
-                  className={inputFieldStyles}
+                  
                 />
                 <InputGroup.Suffix>
                   <button

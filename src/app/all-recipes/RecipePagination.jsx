@@ -57,7 +57,7 @@ export default function RecipePagination({ page, totalPages, paramsStr }) {
               </Pagination.Item>
             ) : (
               <Pagination.Item key={p}>
-                <Link href={`/all-recipes?${paramsStr}page=${p}`}>
+                <Link href={`/all-recipes?page=${p}`}>
                   <Pagination.Link
                     isActive={p === page}
                     className={`flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium transition-colors ${

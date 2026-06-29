@@ -3,20 +3,15 @@ import { Star, Calendar } from "@gravity-ui/icons";
 import { getServerSession } from "@/lib/core/session";
 import EditProfileDialog from "./EditProfileDialog";
 import Link from "next/link";
+import { getUserById } from "@/lib/api/user";
 
 
-// TODO: replace with your real session/user fetch, e.g.
-// const user = await getServerSession();
-const dummyUser = {
-  name: "Md. Moynul Islam",
-  email: "moynul@example.com",
-  image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/65/35/73/sylhet-city.jpg",
-  isPremium: true,
-  createdAt: "2026-01-15T00:00:00.000Z",
-};
+
 
 const page = async () => {
-  const user = (await getServerSession()) ?? dummyUser;
+  const user = await getServerSession() ;
+  const userData = await getUserById(user?.id)
+  const isPremium = userData?.isPremium;
 
   return (
     <div className="mx-auto w-full max-w-2xl px-6 py-10">
@@ -41,7 +36,7 @@ const page = async () => {
                 {user?.name}
               </h2>
 
-              {user?.isPremium ? (
+              {userData?.isPremium ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-[#F4A340]/40 bg-[#F4A340]/10 px-2.5 py-1 text-xs font-semibold text-[#B5781F]">
                   <Star width={13} height={13} className="fill-current" />
                   Premium
@@ -71,7 +66,7 @@ const page = async () => {
           </div>
         </div>
 
-        {user?.role !== "admin" && !user?.isPremium && (
+        {user?.role !== "admin" && !userData?.isPremium && (
           <div className="mt-6 flex flex-col items-start justify-between gap-3 rounded-xl border border-[#F4A340]/40 bg-[#F4A340]/10 p-4 sm:flex-row sm:items-center">
             <p className="text-sm text-[#B5781F]">
               Go Premium to unlock unlimited recipes and a premium badge.
