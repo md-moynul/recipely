@@ -81,6 +81,8 @@ export default function NormalRecipes({ recipe }) {
         <div className="mt-4 flex items-center gap-4 text-sm text-[#6B6155] dark:text-[#B8AFA2]">
           {recipe.cuisineType && <span>{recipe.cuisineType}</span>}
 
+          {recipe.difficultyLevel && <span>{recipe.difficultyLevel}</span>}
+
           {recipe.preparationTime && (
             <span className="flex items-center gap-1.5">
               <Clock width={15} height={15} />

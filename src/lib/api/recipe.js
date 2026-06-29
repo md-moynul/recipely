@@ -7,8 +7,8 @@ export const getRecipeByAuthorId = async (authorId) => {
 export const getRecipeByRecipeId = async (recipeId) => {
     return await serverFetch(`/api/my-recipe/${recipeId}`);
 }
-export const getAllRecipes = async (page) => {
-    return await serverFetch(`/api/recipes?page=${page}`);
+export const getAllRecipes = async (params) => {
+    return await serverFetch(`/api/recipes?${params}`);
 } 
 export const getAllRecipesUseAdmin = async () => {
     const token = await getServerToken()    

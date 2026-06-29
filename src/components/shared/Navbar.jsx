@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Button, Avatar } from "@heroui/react";
+import { Button, Avatar, Spinner } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -57,7 +57,11 @@ export default function Navbar() {
     ...baseNavLinks,
     ...(session ? [{ label: "Dashboard", href: `/dashboard/${session.user.role}` }] : []),
   ];
-
+  if(isPending){
+    return <div className="flex min-w-screen min-h-screen items-center justify-center">
+      <Spinner color="warning" size="sm" />
+    </div>
+  }
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-[#EAE0D3] bg-[#FFF9F2]/80 backdrop-blur-lg dark:border-[#3A332A] dark:bg-[#1A1714]/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
