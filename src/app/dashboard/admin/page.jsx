@@ -33,7 +33,7 @@ const AdminPage = async () => {
       icon: Person,
       label: "Total Users",
       value: users?.length,
-      accent: { bg: "bg-[#E6F0FA]", text: "text-[#2E6FB5]" },
+      accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
     {
       icon: Book,
@@ -45,13 +45,13 @@ const AdminPage = async () => {
       icon: CreditCard,
       label: "Total Premium Members",
       value: premiumUsers?.length,
-      accent: { bg: "bg-[#FFF4E0]", text: "text-[#B5870A]" },
+      accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
     {
       icon: Flag,
       label: "Total Reports",
       value: reports?.length,
-      accent: { bg: "bg-[#FBE9E7]", text: "text-[#C0392B]" },
+      accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
   ];
 

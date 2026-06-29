@@ -1,7 +1,7 @@
 import { Pagination } from "@heroui/react";
 import Link from "next/link";
 
-export default function RecipePagination({ page, totalPages, paramsStr }) {
+export default function RecipePagination({ page, totalPages, paramsStr,link='/all-recipes' }) {
   // Windowed page numbers: show first, last, current ±1, and "…" gaps
   // instead of every page number when totalPages is large.
   console.log(page, totalPages, paramsStr);
@@ -31,7 +31,7 @@ export default function RecipePagination({ page, totalPages, paramsStr }) {
         <Pagination.Content className="flex items-center gap-1.5">
           <Pagination.Item>
             {page > 1 ? (
-              <Link href={`/all-recipes?page=${page - 1}`}>
+              <Link href={`${link}?page=${page - 1}`}>
                 <Pagination.Previous className="flex items-center gap-1.5 rounded-xl border border-[#EAE0D3] px-3 py-2 text-sm font-medium text-[#2B2420] transition-colors hover:bg-[#FBF1E6] dark:border-[#3A332A] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]">
                   <Pagination.PreviousIcon />
                   <span className="hidden sm:inline">Previous</span>
@@ -57,11 +57,11 @@ export default function RecipePagination({ page, totalPages, paramsStr }) {
               </Pagination.Item>
             ) : (
               <Pagination.Item key={p}>
-                <Link href={`/all-recipes?page=${p}`}>
+                <Link href={`${link}?page=${p}`}>
                   <Pagination.Link
-                    isActive={p === page}
+                    isActive={p == page}
                     className={`flex h-9 w-9 items-center justify-center rounded-xl text-sm font-medium transition-colors ${
-                      p === page
+                      p == page
                         ? "bg-[#E85D3D] text-white"
                         : "text-[#6B6155] hover:bg-[#FBF1E6] dark:text-[#B8AFA2] dark:hover:bg-[#1A1714]"
                     }`}
@@ -75,7 +75,7 @@ export default function RecipePagination({ page, totalPages, paramsStr }) {
 
           <Pagination.Item>
             {page < totalPages ? (
-              <Link href={`/all-recipes?page=${page + 1}`}>
+              <Link href={`${link}?page=${Number(page) + 1}`}>
                 <Pagination.Next className="flex items-center gap-1.5 rounded-xl border border-[#EAE0D3] px-3 py-2 text-sm font-medium text-[#2B2420] transition-colors hover:bg-[#FBF1E6] dark:border-[#3A332A] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]">
                   <span className="hidden sm:inline">Next</span>
                   <Pagination.NextIcon />

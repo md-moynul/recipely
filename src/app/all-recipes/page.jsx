@@ -9,7 +9,6 @@ const AllRecipesPage = async ({ searchParams }) => {
   const paramsObj = new URLSearchParams(params);
   const paramsStr = paramsObj.toString();
   const recipeData = await getAllRecipes(paramsStr);
-  const paramsPage = paramsObj.get("page");
   const recipes = recipeData?.data;
   const page = Number(recipeData?.page) || 1;
   const totalPages = recipeData?.totalPages;
