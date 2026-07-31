@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Button, Avatar, Spinner } from "@heroui/react";
+import { Button, Avatar } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -55,13 +55,14 @@ export default function Navbar() {
 
   const navLinks = [
     ...baseNavLinks,
-    ...(session ? [{ label: "Dashboard", href: `/dashboard/${session.user.role}` }] : []),
+    ...(session?.user?.role ? [{ label: "Dashboard", href: `/dashboard/${session.user.role}` }] : []),
   ];
-  if(isPending){
-    return <div className="flex min-w-screen min-h-screen items-center justify-center">
-      <Spinner color="warning" size="sm" />
-    </div>
-  }
+
+  const isActive = (href) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-[#EAE0D3] bg-[#FFF9F2]/80 backdrop-blur-lg dark:border-[#3A332A] dark:bg-[#1A1714]/80">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -74,9 +75,9 @@ export default function Navbar() {
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> // X Icon
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /> // Hamburger
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               )}
             </svg>
           </button>
@@ -88,19 +89,24 @@ export default function Navbar() {
         </div>
 
         {/* Desktop Nav */}
-        <ul className="hidden items-center gap-7 md:flex">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <Link
-                href={link.href}
-                className={`text-sm font-medium transition-colors hover:text-[#E85D3D] dark:text-[#F4EDE4] dark:hover:text-[#FF7A52] ${
-                  pathname === link.href ? "bg-[#E85D3D] text-white px-3 py-1 rounded-md" : "text-[#2B2420]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
+        <ul className="hidden items-center gap-2 md:flex">
+          {navLinks.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                    active
+                      ? "bg-[#E85D3D] text-white shadow-xs hover:bg-[#D14E30]"
+                      : "text-[#2B2420] hover:bg-[#E85D3D]/10 hover:text-[#E85D3D] dark:text-[#F4EDE4] dark:hover:bg-[#E85D3D]/20 dark:hover:text-[#FF7A52]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         {/* Right Side */}
@@ -121,7 +127,6 @@ export default function Navbar() {
               {/* Profile Modal */}
               {isProfileModalOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
-                  {/* ... same modal content as before ... */}
                   <div className="px-4 py-3 border-b dark:border-gray-700">
                     <p className="font-medium">{session.user?.name}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{session.user?.email}</p>
@@ -139,7 +144,7 @@ export default function Navbar() {
                   </div>
 
                   <div className="border-t dark:border-gray-700 pt-1 mt-1">
-                    <button onClick={handleLogout} className="flex w-full items-center gap-3 px-4 py-3 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">
+                    <button onClick={handleLogout} className="flex w-full items-center gap-3 px-4 py-3 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm cursor-pointer">
                       <ArrowRightFromSquare className="w-5 h-5" />
                       Log out
                     </button>
@@ -153,7 +158,7 @@ export default function Navbar() {
                Register
               </Link>
               <Link href="/auth/login">
-                <Button className="rounded-xl bg-[#E85D3D] text-sm font-medium text-white hover:bg-[#D14E30] ">
+                <Button className="rounded-xl bg-[#E85D3D] text-sm font-medium text-white hover:bg-[#D14E30]">
                   Login
                 </Button>
               </Link>
@@ -165,19 +170,26 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden" ref={menuRef}>
-          <div className="border-t border-[#EAE0D3] ">
+          <div className="border-t border-[#EAE0D3] dark:border-[#3A332A]">
             <ul className="flex flex-col gap-1 p-4">
-              {navLinks.map((link) => (
-                <li key={link.href}>
-                  <Link 
-                    href={link.href} 
-                    className="block py-3 px-4 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <li key={link.href}>
+                    <Link 
+                      href={link.href} 
+                      className={`block rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                        active
+                          ? "bg-[#E85D3D] text-white"
+                          : "text-[#2B2420] hover:bg-stone-100 dark:text-[#F4EDE4] dark:hover:bg-stone-800"
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
