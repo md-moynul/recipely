@@ -184,7 +184,7 @@ export default function LoginPage({ redirectBy = "/" }) {
               <button
                 type="button"
                 disabled={isSubmitting}
-                onClick={() => handleDemoLogin("heju@mailinator.com", "Pa$$w0rd!")}
+                onClick={() => handleDemoLogin("vazola@mailinator.com", "Pa$$w0rd!")}
                 className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[#EAE0D3] bg-white py-2 text-xs font-medium text-[#2B2420] transition-colors hover:bg-[#FBF1E6] hover:text-[#E85D3D] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#3A332A] dark:bg-[#252019] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
               >
                 <Person width={14} height={14} />
