@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Table } from "@heroui/react";
-import { TrashBin } from "@gravity-ui/icons";
+import { Eye, TrashBin } from "@gravity-ui/icons";
 import { toast } from "react-toastify";
 import { removeFavorite } from "@/lib/action/recipe";
 import { authClient } from "@/lib/auth-client";
@@ -18,12 +18,12 @@ export default function FavoritesTable({ favorites }) {
     isPending,
   } = authClient.useSession();
   const user = session?.user;
+
   const handleRemoveFavorite = async (favoriteId) => {
     setRemovingId(favoriteId);
     try {
-      
       const result = await removeFavorite(favoriteId, user?.id);
-      console.log(result)
+      console.log(result);
       if (result?.deletedCount) {
         toast.success("Removed from favorites");
         router.refresh();
@@ -74,7 +74,7 @@ export default function FavoritesTable({ favorites }) {
               {favorites.map((favorite) => {
                 const favoriteId = favorite._id ?? favorite.id;
                 const recipe = favorite.recipe ?? {};
-                const recipeId = favorite?.recipeId;
+                const targetRecipeId = recipe._id ?? favorite.recipeId;
                 const isRemoving = removingId === favoriteId;
 
                 return (
@@ -85,7 +85,7 @@ export default function FavoritesTable({ favorites }) {
                           {recipe.recipeImage ? (
                             <Image
                               src={recipe.recipeImage}
-                              alt={recipe.recipeName}
+                              alt={recipe.recipeName ?? "Recipe"}
                               fill
                               className="object-cover"
                             />
@@ -113,19 +113,31 @@ export default function FavoritesTable({ favorites }) {
                       <span className="text-sm text-[#6B6155] dark:text-[#B8AFA2]">
                         {favorite.addedAt
                           ? new Date(favorite.addedAt).toLocaleDateString(undefined, {
-                            dateStyle: "medium",
-                          })
+                              dateStyle: "medium",
+                            })
                           : "—"}
                       </span>
                     </Table.Cell>
 
                     <Table.Cell>
-                      <div className="flex items-center justify-end">
+                      <div className="flex items-center justify-end gap-1">
+                        {/* View Recipe Link Button */}
+                        <Link
+                          href={`/all-recipes/${targetRecipeId}`}
+                          aria-label="View recipe details"
+                          title="View Recipe"
+                          className="flex h-8 w-8 items-center justify-center rounded-lg text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#E85D3D] dark:hover:bg-[#1A1714]"
+                        >
+                          <Eye width={15} height={15} />
+                        </Link>
+
+                        {/* Remove Favorite Button */}
                         <button
                           type="button"
                           onClick={() => handleRemoveFavorite(recipe?._id)}
                           disabled={isRemoving}
                           aria-label="Remove from favorites"
+                          title="Remove from favorites"
                           className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-[#9C9388] transition-colors hover:bg-[#FBF1E6] hover:text-[#D64545] disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-[#1A1714]"
                         >
                           <TrashBin width={15} height={15} />
