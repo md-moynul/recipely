@@ -12,31 +12,24 @@ import {
   TextField,
   FieldError,
 } from "@heroui/react";
-import { Envelope, Lock, Eye, EyeSlash } from "@gravity-ui/icons";
+import { Envelope, Lock, Eye, EyeSlash, ShieldKeyhole, Person } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage({ redirectBy = "/" }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-
+  const handleLoginSubmit = async (loginEmail, loginPassword, remember = true) => {
     setIsSubmitting(true);
-
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email");
-    const password = formData.get("password");
-    const remember = formData.get("remember") === "on";
-
     try {
       const { data, error } = await authClient.signIn.email({
-        email,
-        password,
+        email: loginEmail,
+        password: loginPassword,
         rememberMe: remember,
       });
       if (data) {
@@ -51,6 +44,24 @@ export default function LoginPage({ redirectBy = "/" }) {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const formData = new FormData(e.currentTarget);
+    const formEmail = formData.get("email");
+    const formPassword = formData.get("password");
+    const remember = formData.get("remember") === "on";
+
+    await handleLoginSubmit(formEmail, formPassword, remember);
+  };
+
+  const handleDemoLogin = async (demoEmail, demoPassword) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    await handleLoginSubmit(demoEmail, demoPassword, true);
   };
 
   const handleGoogleLogin = async () => {
@@ -86,8 +97,9 @@ export default function LoginPage({ redirectBy = "/" }) {
                   <Envelope width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className=""
                 />
               </InputGroup>
               <FieldError className="text-xs text-[#D64545]" />
@@ -114,14 +126,15 @@ export default function LoginPage({ redirectBy = "/" }) {
                   <Lock width={16} height={16} className="text-[#9C9388] dark:text-[#F4EDE4]" />
                 </InputGroup.Prefix>
                 <InputGroup.Input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
-                  className=""
                 />
                 <InputGroup.Suffix>
                   <button
                     type="button"
                     onClick={() => setIsPasswordVisible((v) => !v)}
-                    className="text-[#9C9388] hover:text-[#6B6155]"
+                    className="cursor-pointer text-[#9C9388] hover:text-[#6B6155]"
                     aria-label={isPasswordVisible ? "Hide password" : "Show password"}
                   >
                     {isPasswordVisible ? (
@@ -147,14 +160,41 @@ export default function LoginPage({ redirectBy = "/" }) {
             <Button
               type="submit"
               isDisabled={isSubmitting}
-              className="mt-2 w-full rounded-xl bg-[#E85D3D] py-3 text-[15px] font-medium text-white shadow-sm transition-colors hover:bg-[#D14E30] disabled:opacity-60"
+              className="mt-2 w-full cursor-pointer rounded-xl bg-[#E85D3D] py-3 text-[15px] font-medium text-white shadow-sm transition-colors hover:bg-[#D14E30] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSubmitting ? "Logging in…" : "Log in"}
             </Button>
           </Form>
 
+          {/* Quick Demo Login Section */}
+          <div className="mt-6 rounded-2xl border border-[#EAE0D3] bg-[#FBF1E6]/50 p-4 dark:border-[#3A332A] dark:bg-[#1A1714]/50">
+            <p className="text-center text-xs font-semibold uppercase tracking-wider text-[#9C9388]">
+              Quick Demo Login
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => handleDemoLogin("admin@gmail.com", "Pa$$w0rd!")}
+                className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[#EAE0D3] bg-white py-2 text-xs font-medium text-[#2B2420] transition-colors hover:bg-[#FBF1E6] hover:text-[#E85D3D] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#3A332A] dark:bg-[#252019] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
+              >
+                <ShieldKeyhole width={14} height={14} />
+                Admin Demo
+              </button>
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={() => handleDemoLogin("heju@mailinator.com", "Pa$$w0rd!")}
+                className="flex cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-[#EAE0D3] bg-white py-2 text-xs font-medium text-[#2B2420] transition-colors hover:bg-[#FBF1E6] hover:text-[#E85D3D] disabled:cursor-not-allowed disabled:opacity-60 dark:border-[#3A332A] dark:bg-[#252019] dark:text-[#F4EDE4] dark:hover:bg-[#1A1714]"
+              >
+                <Person width={14} height={14} />
+                User Demo
+              </button>
+            </div>
+          </div>
+
           {/* Divider */}
-          <div className="mt-7 flex items-center gap-3">
+          <div className="mt-6 flex items-center gap-3">
             <span className="h-px flex-1 bg-[#EAE0D3]" />
             <span className="text-xs font-medium uppercase tracking-wide text-[#9C9388] dark:text-[#F4EDE4]">
               or continue with
@@ -166,7 +206,7 @@ export default function LoginPage({ redirectBy = "/" }) {
           <Button
             type="button"
             onClick={handleGoogleLogin}
-            className="mt-5 flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6]"
+            className="mt-5 flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border border-[#EAE0D3] bg-white py-3 text-[15px] font-medium text-[#2B2420] shadow-sm transition-colors hover:bg-[#FBF1E6]"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
               <path
