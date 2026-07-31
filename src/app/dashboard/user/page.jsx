@@ -1,22 +1,15 @@
-import { getPaymentByUserId } from "@/lib/api/payment";
-import {getRecipeByAuthorId, getRecipeByUserEmail } from "@/lib/api/recipe";
-import { getUserById } from "@/lib/api/user";
-import { getServerSession } from "@/lib/core/session";
+import { getUserOverview } from "@/lib/api/dashboard";
 import { Book, Bookmark, CreditCard, Heart, Star } from "@gravity-ui/icons";
 import Link from "next/link";
 
 const userPage = async () => {
-  const user = await getServerSession();
-  const recipe = await getRecipeByAuthorId(user?.id);
-  const favoriteRecipe = await getRecipeByUserEmail(user?.email);
-  const totalPurchasedRecipes = await getPaymentByUserId(user?.id);
-  const totalRecipes = recipe?.length;
-  const userData = await getUserById(user?.id)
-  const isPremium = userData?.isPremium;
-  const totalLikesReceived = recipe?.reduce((acc, curr) => acc + curr.likes, 0);
-  const totalFavorites = favoriteRecipe?.length;
-  const totalPurchased = totalPurchasedRecipes.length;
+  const overview = await getUserOverview();
   
+  const totalRecipes = overview?.totalRecipes ?? 0;
+  const totalFavorites = overview?.totalFavorites ?? 0;
+  const totalLikesReceived = overview?.totalLikesReceived ?? 0;
+  const totalPurchased = overview?.totalPurchased ?? 0;
+  const isPremium = overview?.isPremium ?? false;
 
   const cards = [
     {

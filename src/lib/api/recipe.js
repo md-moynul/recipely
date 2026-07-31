@@ -1,11 +1,12 @@
-import { protectedFetch, serverFetch } from "../core/server";
+import { protectedFetch, serverFetch, optionalTokenFetch } from "../core/server";
 import { getServerToken } from "../core/server-token";
 export const getRecipeByAuthorId = async (authorId) => {
     const token = await getServerToken()
     return await protectedFetch(`/api/my-recipe?authorId=${authorId}`,token);
 }
 export const getRecipeByRecipeId = async (recipeId) => {
-    return await serverFetch(`/api/my-recipe/${recipeId}`);
+    const token = await getServerToken();
+    return await optionalTokenFetch(`/api/my-recipe/${recipeId}`, token);
 }
 export const getAllRecipes = async (params) => {
     return await serverFetch(`/api/recipes?${params}`);

@@ -1,7 +1,5 @@
 import OverviewBarChart from "@/components/dashboard/OverviewBarChart";
-import { getAllRecipes, getAllRecipesUseAdmin } from "@/lib/api/recipe";
-import { getReports } from "@/lib/api/report";
-import { getAllUsers, getPremiumUsers } from "@/lib/api/user";
+import { getAdminOverview } from "@/lib/api/dashboard";
 import { Person, Book, CreditCard, Flag } from "@gravity-ui/icons";
 
 
@@ -23,34 +21,31 @@ function StatCard({ icon: Icon, label, value, accent }) {
 }
 
 const AdminPage = async () => {
-  const users = await getAllUsers();
-  const recipes = await getAllRecipesUseAdmin();
-  const reports = await getReports();
-  const premiumUsers = await getPremiumUsers();
+  const overview = await getAdminOverview();
 
   const cards = [
     {
       icon: Person,
       label: "Total Users",
-      value: users?.length,
+      value: overview?.totalUsers ?? 0,
       accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
     {
       icon: Book,
       label: "Total Recipes",
-      value: recipes?.length,
+      value: overview?.totalRecipes ?? 0,
       accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
     {
       icon: CreditCard,
       label: "Total Premium Members",
-      value: premiumUsers?.length,
+      value: overview?.totalPremiumUsers ?? 0,
       accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
     {
       icon: Flag,
       label: "Total Reports",
-      value: reports?.length,
+      value: overview?.totalReports ?? 0,
       accent: { bg: "bg-[#E85D3D]/10", text: "text-[#E85D3D]" },
     },
   ];

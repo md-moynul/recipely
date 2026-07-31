@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getRecipeByRecipeId } from "@/lib/api/recipe";
 import RecipeActions from "@/components/recipe-deatilspage/RecipeActions";
+import PurchaseButton from "@/components/recipe-deatilspage/PurchaseButton";
 import { getServerSession } from "@/lib/core/session";
 import { redirect } from "next/navigation";
 
@@ -16,19 +17,22 @@ export default async function RecipeDetailsPage({ params }) {
   }
   
   const recipe = await getRecipeByRecipeId(id);
+  const isPaid = recipe.paymentStatus === "paid";
 
   return (
-    <main className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8 ">
+    <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 ">
       <div className="mx-auto max-w-4xl overflow-hidden rounded-3xl border border-[#EAE0D3] bg-white shadow-sm dark:border-[#3A332A] dark:bg-[#252019]">
         {/* Hero Cover Image Banner */}
         <div className="relative h-80 w-full bg-[#FBF1E6] sm:h-100 dark:bg-[#1A1714]">
-          <Image
-            src={recipe.recipeImage}
-            alt={recipe.recipeName}
-            fill
-            priority
-            className="object-cover"
-          />
+          {recipe.recipeImage && (
+            <Image
+              src={recipe.recipeImage}
+              alt={recipe.recipeName || "Recipe Image"}
+              fill
+              priority
+              className="object-cover"
+            />
+          )}
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent" />
 
           <Link
@@ -58,9 +62,10 @@ export default async function RecipeDetailsPage({ params }) {
                 recipeId={recipe._id}
                 recipeName={recipe.recipeName}
                 initialLikes={recipe.likes}
-                likedBy={recipe.likedBy}
+                likedBy={recipe.likedBy || []}
                 userId={user?.id}
                 price={recipe.price}
+                isPurchased={isPaid}
               />
             </div>
           </div>
@@ -72,7 +77,7 @@ export default async function RecipeDetailsPage({ params }) {
                 Prep Time
               </p>
               <p className="mt-0.5 text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                {recipe.preparationTime}
+                {recipe.preparationTime || "N/A"}
               </p>
             </div>
             <div>
@@ -80,7 +85,7 @@ export default async function RecipeDetailsPage({ params }) {
                 Difficulty
               </p>
               <p className="mt-0.5 text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
-                {recipe.difficultyLevel}
+                {recipe.difficultyLevel || "N/A"}
               </p>
             </div>
             <div>
@@ -96,7 +101,7 @@ export default async function RecipeDetailsPage({ params }) {
                 Status
               </p>
               <p className="mt-0.5 text-sm font-medium capitalize text-green-600 dark:text-green-400">
-                {recipe.status}
+                {isPaid ? "Unlocked" : "Locked"}
               </p>
             </div>
           </div>
@@ -104,31 +109,56 @@ export default async function RecipeDetailsPage({ params }) {
           <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
             {/* Left Content Column: Ingredients & Instructions */}
             <div className="space-y-6 md:col-span-2">
-              <div>
-                <h2 className="mb-3 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
-                  Ingredients
-                </h2>
-                <ul className="space-y-2">
-                  {recipe.ingredients?.map((ingredient, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-300"
-                    >
-                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#E85D3D]" />
-                      {ingredient}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {isPaid ? (
+                <>
+                  <div>
+                    <h2 className="mb-3 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
+                      Ingredients
+                    </h2>
+                    <ul className="space-y-2">
+                      {recipe.ingredients?.map((ingredient, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-300"
+                        >
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#E85D3D]" />
+                          {ingredient}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-              <div>
-                <h2 className="mb-2 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
-                  Instructions
-                </h2>
-                <p className="text-sm leading-relaxed whitespace-pre-line text-stone-600 dark:text-stone-300">
-                  {recipe.instructions}
-                </p>
-              </div>
+                  <div>
+                    <h2 className="mb-2 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
+                      Instructions
+                    </h2>
+                    <p className="text-sm leading-relaxed whitespace-pre-line text-stone-600 dark:text-stone-300">
+                      {recipe.instructions}
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-[#EAE0D3] bg-[#FBF1E6]/50 p-8 text-center dark:border-[#3A332A] dark:bg-[#1A1714]/40">
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#E85D3D]/10 text-[#E85D3D]">
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <h3 className="mt-4 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
+                    Ingredients & Instructions Locked
+                  </h3>
+                  <p className="mt-1 text-sm text-[#6B6155] dark:text-[#B8AFA2]">
+                    Please purchase this recipe to unlock the ingredients list and full step-by-step instructions.
+                  </p>
+                  <div className="mt-6 flex justify-center">
+                    <PurchaseButton
+                      recipeId={recipe._id}
+                      isPurchased={false}
+                      price={recipe.price}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Right Column: Author Profile Card */}
@@ -138,22 +168,26 @@ export default async function RecipeDetailsPage({ params }) {
                   Recipe Creator
                 </p>
                 <div className="relative mx-auto h-16 w-16 overflow-hidden rounded-full border-2 border-[#E85D3D]">
-                  <Image
-                    src={recipe.authorImage}
-                    alt={recipe.authorName}
-                    fill
-                    className="object-cover"
-                  />
+                  {recipe.authorImage ? (
+                    <Image
+                      src={recipe.authorImage}
+                      alt={recipe.authorName || "Author Image"}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : null}
                 </div>
                 <h3 className="mt-3 text-sm font-bold text-[#2B2420] dark:text-[#F4EDE4]">
-                  {recipe.authorName}
+                  {recipe.authorName || "Unknown Author"}
                 </h3>
-                <p className="mt-1 text-xs text-stone-400">
-                  Posted on{" "}
-                  {new Date(recipe.createdAt).toLocaleDateString(undefined, {
-                    dateStyle: "medium",
-                  })}
-                </p>
+                {recipe.createdAt && (
+                  <p className="mt-1 text-xs text-stone-400">
+                    Posted on{" "}
+                    {new Date(recipe.createdAt).toLocaleDateString(undefined, {
+                      dateStyle: "medium",
+                    })}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -161,4 +195,4 @@ export default async function RecipeDetailsPage({ params }) {
       </div>
     </main>
   );
-}
+}
