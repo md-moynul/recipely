@@ -30,7 +30,7 @@ const fieldBg = "bg-[#FFF9F2] dark:bg-background";
 const fieldClass = `rounded-xl border-[#EAE0D3] dark:border-[#3A332A] ${fieldBg} text-[#2B2420] dark:text-[#F4EDE4] placeholder:text-[#9C9388] focus-visible:border-[#E85D3D] focus-visible:ring-[#E85D3D]/20`;
 const labelClass = "text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]";
 
-export default function EditRecipeForm({ id }) {
+export default function EditRecipeForm({ id, redirectPath = "/dashboard/user/my-recipes" }) {
   const router = useRouter();
 
   const [recipeId, setRecipeId] = useState(null);
@@ -140,7 +140,7 @@ export default function EditRecipeForm({ id }) {
       if (result?.modifiedCount || result?.acknowledged) {
         toast.success("Recipe updated successfully!");
         setTimeout(() => {
-          router.push("/dashboard/user/my-recipes");
+          router.push(redirectPath);
           router.refresh();
         }, 100);
       }

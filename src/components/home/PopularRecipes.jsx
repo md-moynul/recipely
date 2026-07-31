@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Heart, Flame } from "@gravity-ui/icons";
-import RecipePagination from "@/app/all-recipes/RecipePagination";
 
 const container = {
   hidden: { opacity: 0 },
@@ -65,10 +64,9 @@ function PopularCard({ recipe }) {
 }
 
 export default function PopularRecipesSection({ recipes }) {
-  const recipeArray = recipes.recipes;
-  const page = recipes.page;
-  const totalPages = recipes.totalPages;
-  if (!recipes || recipeArray.length === 0) return null;
+  // Support both array-only and paginated response formats
+  const recipeArray = Array.isArray(recipes) ? recipes : recipes?.recipes;
+  if (!recipeArray || recipeArray.length === 0) return null;
 
   return (
     <section className="bg-[#FBF1E6]/30 px-4 py-16 dark:bg-[#1A1714]/30">
@@ -109,16 +107,6 @@ export default function PopularRecipesSection({ recipes }) {
           ))}
         </motion.div>
       </div>
-      <motion.div
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={container}
-        className="flex justify-center "
-      >
-        <RecipePagination totalPages={totalPages} page={page} link="" />
-
-      </motion.div>
     </section>
   );
 }
