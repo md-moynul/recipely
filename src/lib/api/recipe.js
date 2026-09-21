@@ -29,3 +29,6 @@ export const getFeaturedRecipe = async () => {
 export const getPopularRecipes = async (params) => {
     return await serverFetch(`/api/recipes/popular?${params}`);
 }
+export const getRecipeReviews = async (recipeId) => {
+    return await serverFetch(`/api/reviews/${recipeId}`);
+}
