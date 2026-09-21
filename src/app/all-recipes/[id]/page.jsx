@@ -6,6 +6,7 @@ import { getRecipeByRecipeId, getRecipeReviews } from "@/lib/api/recipe";
 import RecipeActions from "@/components/recipe-deatilspage/RecipeActions";
 import PurchaseButton from "@/components/recipe-deatilspage/PurchaseButton";
 import RecipeReviewsSection from "@/components/recipe-deatilspage/RecipeReviewsSection";
+import RecipeIngredientsScaler from "@/components/recipe-deatilspage/RecipeIngredientsScaler";
 import { getServerSession } from "@/lib/core/session";
 import { redirect } from "next/navigation";
 
@@ -116,24 +117,13 @@ export default async function RecipeDetailsPage({ params }) {
             <div className="space-y-6 md:col-span-2">
               {isPaid ? (
                 <>
-                  <div>
-                    <h2 className="mb-3 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
-                      Ingredients
-                    </h2>
-                    <ul className="space-y-2">
-                      {recipe.ingredients?.map((ingredient, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-center gap-3 text-sm text-stone-600 dark:text-stone-300"
-                        >
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#E85D3D]" />
-                          {ingredient}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  {/* Dynamic Serving Scaler & Ingredients Checklist */}
+                  <RecipeIngredientsScaler
+                    ingredients={recipe.ingredients || []}
+                    baseServings={recipe.servings || 4}
+                  />
 
-                  <div>
+                  <div className="pt-2">
                     <h2 className="mb-2 text-lg font-bold text-[#2B2420] dark:text-[#F4EDE4]">
                       Instructions
                     </h2>
