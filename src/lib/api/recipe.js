@@ -32,3 +32,11 @@ export const getPopularRecipes = async (params) => {
 export const getRecipeReviews = async (recipeId) => {
     return await serverFetch(`/api/reviews/${recipeId}`);
 }
+export const getAllReviewsAdmin = async () => {
+    const token = await getServerToken();
+    return await protectedFetch('/api/admin/reviews', token);
+}
+export const getMyReviews = async () => {
+    const token = await getServerToken();
+    return await protectedFetch('/api/my-reviews', token);
+}
