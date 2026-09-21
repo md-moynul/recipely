@@ -37,3 +37,11 @@ export const featureRecipe = async (recipeId, isFeatured) => {
     const token = await getClientToken()
     return protectedMutation(`/api/featured/${recipeId}?isFeatured=${isFeatured}`, null, token, 'PATCH')
 }
+export const addReview = async (reviewData) => {
+    const token = await getClientToken();
+    return protectedMutation('/api/reviews', reviewData, token);
+}
+export const deleteReview = async (reviewId) => {
+    const token = await getClientToken();
+    return protectedMutation(`/api/reviews/${reviewId}`, null, token, 'DELETE');
+}
