@@ -2,9 +2,10 @@
 // app/recipes/[id]/page.jsx
 import Image from "next/image";
 import Link from "next/link";
-import { getRecipeByRecipeId } from "@/lib/api/recipe";
+import { getRecipeByRecipeId, getRecipeReviews } from "@/lib/api/recipe";
 import RecipeActions from "@/components/recipe-deatilspage/RecipeActions";
 import PurchaseButton from "@/components/recipe-deatilspage/PurchaseButton";
+import RecipeReviewsSection from "@/components/recipe-deatilspage/RecipeReviewsSection";
 import { getServerSession } from "@/lib/core/session";
 import { redirect } from "next/navigation";
 
@@ -16,8 +17,12 @@ export default async function RecipeDetailsPage({ params }) {
    redirect(`/auth/login?redirectBy=/all-recipes/${id}`);
   }
   
-  const recipe = await getRecipeByRecipeId(id);
+  const [recipe, reviewsData] = await Promise.all([
+    getRecipeByRecipeId(id),
+    getRecipeReviews(id).catch(() => ({ reviews: [], averageRating: 0, totalReviews: 0, ratingBreakdown: {} })),
+  ]);
   const isPaid = recipe.paymentStatus === "paid";
+  const isAuthor = user?.id === recipe.authorId;
 
   return (
     <main className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 ">
@@ -191,6 +196,19 @@ export default async function RecipeDetailsPage({ params }) {
               </div>
             </div>
           </div>
+
+          {/* Customer Reviews & Verified Rating Section */}
+          <RecipeReviewsSection
+            recipeId={recipe._id}
+            isPaid={isPaid}
+            isAuthor={isAuthor}
+            user={user}
+            price={recipe.price}
+            initialReviews={reviewsData?.reviews || []}
+            initialAvgRating={reviewsData?.averageRating || 0}
+            initialTotalReviews={reviewsData?.totalReviews || 0}
+            initialBreakdown={reviewsData?.ratingBreakdown || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }}
+          />
         </div>
       </div>
     </main>
