@@ -3,31 +3,21 @@
 import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Table, Button } from "@heroui/react";
 import {
   StarFill,
-  TrashBin,
-  Pencil,
   Eye,
   Magnifier,
   Comment,
   SealCheck,
+  Person,
+  Plus,
 } from "@gravity-ui/icons";
-import { toast } from "react-toastify";
-import { deleteReview } from "@/lib/action/recipe";
-import WriteReviewModal from "@/components/recipe-deatilspage/WriteReviewModal";
 
 export default function MyReviewsTable({ initialReviews = [] }) {
-  const router = useRouter();
-  const [reviews, setReviews] = useState(initialReviews);
+  const [reviews] = useState(initialReviews);
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState("all");
-  const [deletingId, setDeletingId] = useState(null);
-
-  // Edit Modal State
-  const [editingReview, setEditingReview] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Metrics
   const totalReviews = reviews.length;
@@ -39,6 +29,7 @@ export default function MyReviewsTable({ initialReviews = [] }) {
         ).toFixed(1)
       : "0.0";
   const fiveStarCount = reviews.filter((r) => Number(r.rating) === 5).length;
+  const verifiedCount = reviews.filter((r) => r.isVerifiedBuyer).length;
 
   // Filtered reviews
   const filteredReviews = useMemo(() => {
@@ -50,59 +41,17 @@ export default function MyReviewsTable({ initialReviews = [] }) {
       const matchesSearch =
         !q ||
         rev.recipeName?.toLowerCase().includes(q) ||
+        rev.userName?.toLowerCase().includes(q) ||
         rev.comment?.toLowerCase().includes(q);
 
       return matchesRating && matchesSearch;
     });
   }, [reviews, searchQuery, ratingFilter]);
 
-  const handleDelete = async (reviewId) => {
-    if (!confirm("Are you sure you want to delete this review?")) {
-      return;
-    }
-
-    setDeletingId(reviewId);
-    try {
-      const res = await deleteReview(reviewId);
-      if (res?.success || res?.message?.toLowerCase().includes("success")) {
-        toast.success("Review deleted.");
-        setReviews((prev) => prev.filter((r) => r._id !== reviewId));
-        router.refresh();
-      } else {
-        toast.error(res?.message || "Failed to delete review.");
-      }
-    } catch (err) {
-      console.error("Delete review error:", err);
-      toast.error("Failed to delete review.");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  const handleOpenEdit = (review) => {
-    setEditingReview(review);
-    setIsModalOpen(true);
-  };
-
-  const handleReviewSuccess = (res) => {
-    const updated = res.review;
-    if (updated) {
-      setReviews((prev) =>
-        prev.map((r) =>
-          r._id === editingReview?._id ||
-          (r.recipeId === updated.recipeId && r.userId === updated.userId)
-            ? { ...r, ...updated }
-            : r
-        )
-      );
-      router.refresh();
-    }
-  };
-
   return (
     <div className="mt-8 space-y-6">
       {/* 1. Stat Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="rounded-2xl border border-[#EAE0D3] bg-white p-4.5 shadow-sm dark:border-[#3A332A] dark:bg-[#252019]">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E85D3D]/10 text-[#E85D3D]">
@@ -110,7 +59,7 @@ export default function MyReviewsTable({ initialReviews = [] }) {
             </div>
             <div>
               <p className="text-xs font-medium text-[#9C9388] dark:text-[#8A8074]">
-                Your Total Reviews
+                Total Reviews Received
               </p>
               <p className="text-xl font-bold text-[#2B2420] dark:text-[#F4EDE4]">
                 {totalReviews}
@@ -126,7 +75,7 @@ export default function MyReviewsTable({ initialReviews = [] }) {
             </div>
             <div>
               <p className="text-xs font-medium text-[#9C9388] dark:text-[#8A8074]">
-                Average Rating Given
+                Average Recipe Score
               </p>
               <div className="flex items-center gap-1.5">
                 <p className="text-xl font-bold text-[#2B2420] dark:text-[#F4EDE4]">
@@ -145,10 +94,26 @@ export default function MyReviewsTable({ initialReviews = [] }) {
             </div>
             <div>
               <p className="text-xs font-medium text-[#9C9388] dark:text-[#8A8074]">
-                5-Star Rated Dishes
+                5-Star Reviews
               </p>
               <p className="text-xl font-bold text-[#2B2420] dark:text-[#F4EDE4]">
                 {fiveStarCount}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[#EAE0D3] bg-white p-4.5 shadow-sm dark:border-[#3A332A] dark:bg-[#252019]">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-500">
+              <Person width={20} height={20} />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-[#9C9388] dark:text-[#8A8074]">
+                Verified Buyer Reviews
+              </p>
+              <p className="text-xl font-bold text-[#2B2420] dark:text-[#F4EDE4]">
+                {verifiedCount}
               </p>
             </div>
           </div>
@@ -163,7 +128,7 @@ export default function MyReviewsTable({ initialReviews = [] }) {
           </div>
           <input
             type="text"
-            placeholder="Search by recipe name or your feedback..."
+            placeholder="Search by recipe name, reviewer name, or comment..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-xl border border-[#EAE0D3] bg-[#FBF8F3] py-2.5 pl-10 pr-4 text-sm text-[#2B2420] placeholder-[#9C9388] transition-colors focus:border-[#E85D3D] focus:outline-none dark:border-[#3A332A] dark:bg-[#1F1B16] dark:text-[#F4EDE4] dark:placeholder-[#7A7266]"
@@ -203,21 +168,22 @@ export default function MyReviewsTable({ initialReviews = [] }) {
           </div>
           <p className="text-base font-medium text-[#2B2420] dark:text-[#F4EDE4]">
             {reviews.length === 0
-              ? "You haven't written any reviews yet"
+              ? "No customer reviews on your recipes yet"
               : "No reviews match your filter"}
           </p>
           <p className="mt-1 text-sm text-[#9C9388] max-w-sm mx-auto">
             {reviews.length === 0
-              ? "Share your cooking experiences and ratings for recipes you've unlocked to help the community!"
-              : "Try changing your search keywords or star filter."}
+              ? "When other users cook and review your published dishes, their ratings and feedback will appear right here!"
+              : "Try adjusting your search terms or star rating filter."}
           </p>
           {reviews.length === 0 && (
             <div className="mt-5">
               <Link
-                href="/all-recipes"
-                className="inline-flex items-center justify-center rounded-xl bg-[#E85D3D] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
+                href="/dashboard/user/add-recipe"
+                className="inline-flex items-center gap-2 justify-center rounded-xl bg-[#E85D3D] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#D14E30]"
               >
-                Browse Recipes to Review
+                <Plus width={16} height={16} />
+                Publish a New Recipe
               </Link>
             </div>
           )}
@@ -225,7 +191,7 @@ export default function MyReviewsTable({ initialReviews = [] }) {
       ) : (
         <div className="overflow-hidden rounded-2xl border border-[#EAE0D3] shadow-sm dark:border-[#3A332A]">
           <Table
-            aria-label="My reviews table"
+            aria-label="Recipe reviews table"
             className="bg-white dark:bg-[#252019]"
           >
             <Table.ScrollContainer>
@@ -235,13 +201,16 @@ export default function MyReviewsTable({ initialReviews = [] }) {
                     isRowHeader
                     className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074]"
                   >
-                    Recipe
+                    Your Recipe
                   </Table.Column>
                   <Table.Column className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074]">
-                    Your Rating
+                    Customer / Reviewer
                   </Table.Column>
-                  <Table.Column className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074] min-w-[300px]">
-                    Your Review & Notes
+                  <Table.Column className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074]">
+                    Rating
+                  </Table.Column>
+                  <Table.Column className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074] min-w-[280px]">
+                    Customer Feedback
                   </Table.Column>
                   <Table.Column className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074]">
                     Date
@@ -250,14 +219,13 @@ export default function MyReviewsTable({ initialReviews = [] }) {
                     align="end"
                     className="text-xs font-semibold uppercase tracking-wide text-[#9C9388] dark:text-[#8A8074]"
                   >
-                    Actions
+                    Action
                   </Table.Column>
                 </Table.Header>
 
                 <Table.Body>
                   {filteredReviews.map((rev) => {
                     const id = String(rev._id);
-                    const isDeleting = deletingId === id;
                     const dateFormatted = rev.createdAt
                       ? new Date(rev.createdAt).toLocaleDateString("en-US", {
                           month: "short",
@@ -305,7 +273,38 @@ export default function MyReviewsTable({ initialReviews = [] }) {
                           </div>
                         </Table.Cell>
 
-                        {/* 2. Rating */}
+                        {/* 2. Customer / Reviewer */}
+                        <Table.Cell>
+                          <div className="flex items-center gap-2.5">
+                            <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-[#EAE0D3] ring-1 ring-[#EAE0D3] dark:bg-[#3A332A]">
+                              {rev.userImage ? (
+                                <Image
+                                  src={rev.userImage}
+                                  alt={rev.userName || "Customer"}
+                                  fill
+                                  className="object-cover"
+                                />
+                              ) : (
+                                <div className="flex h-full w-full items-center justify-center text-[#9C9388]">
+                                  <Person width={14} height={14} />
+                                </div>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium text-[#2B2420] dark:text-[#F4EDE4]">
+                                {rev.userName || "Food Enthusiast"}
+                              </p>
+                              {rev.isVerifiedBuyer && (
+                                <div className="flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                                  <SealCheck width={12} height={12} />
+                                  <span>Verified Buyer</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </Table.Cell>
+
+                        {/* 3. Rating */}
                         <Table.Cell>
                           <div className="flex items-center gap-1.5">
                             <div className="flex items-center text-amber-500">
@@ -328,56 +327,33 @@ export default function MyReviewsTable({ initialReviews = [] }) {
                           </div>
                         </Table.Cell>
 
-                        {/* 3. Review Comment */}
+                        {/* 4. Review Comment */}
                         <Table.Cell>
                           <p className="text-sm text-[#4A4036] dark:text-[#D1C7BB] line-clamp-3 leading-relaxed max-w-[360px]">
                             {rev.comment}
                           </p>
                         </Table.Cell>
 
-                        {/* 4. Date */}
+                        {/* 5. Date */}
                         <Table.Cell>
                           <span className="text-xs text-[#9C9388] whitespace-nowrap">
                             {dateFormatted}
                           </span>
                         </Table.Cell>
 
-                        {/* 5. Actions */}
+                        {/* 6. Action */}
                         <Table.Cell align="end">
-                          <div className="flex items-center justify-end gap-1.5">
+                          <Link href={`/all-recipes/${rev.recipeId}`}>
                             <Button
                               size="sm"
                               variant="flat"
-                              onClick={() => handleOpenEdit(rev)}
-                              className="h-8 gap-1.5 rounded-lg bg-[#F4EDE4] px-2.5 text-xs font-medium text-[#2B2420] hover:bg-[#EAE0D3] dark:bg-[#332C24] dark:text-[#F4EDE4] dark:hover:bg-[#3E362C]"
-                              title="Edit your review"
+                              className="h-8 gap-1.5 rounded-lg bg-[#F4EDE4] px-3 text-xs font-medium text-[#2B2420] hover:bg-[#EAE0D3] dark:bg-[#332C24] dark:text-[#F4EDE4] dark:hover:bg-[#3E362C]"
+                              title="View Recipe Page"
                             >
-                              <Pencil width={13} height={13} />
-                              <span>Edit</span>
+                              <Eye width={14} height={14} />
+                              <span>View Recipe</span>
                             </Button>
-
-                            <Link href={`/all-recipes/${rev.recipeId}`}>
-                              <Button
-                                size="sm"
-                                variant="light"
-                                className="h-8 min-w-8 p-0 text-[#6B6155] hover:text-[#2B2420] dark:text-[#B8AFA2] dark:hover:text-white"
-                                title="View Recipe Page"
-                              >
-                                <Eye width={15} height={15} />
-                              </Button>
-                            </Link>
-
-                            <Button
-                              size="sm"
-                              variant="light"
-                              disabled={isDeleting}
-                              onClick={() => handleDelete(id)}
-                              className="h-8 min-w-8 p-0 text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40"
-                              title="Delete Review"
-                            >
-                              <TrashBin width={15} height={15} />
-                            </Button>
-                          </div>
+                          </Link>
                         </Table.Cell>
                       </Table.Row>
                     );
@@ -387,21 +363,6 @@ export default function MyReviewsTable({ initialReviews = [] }) {
             </Table.ScrollContainer>
           </Table>
         </div>
-      )}
-
-      {/* Edit Review Modal */}
-      {editingReview && (
-        <WriteReviewModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setEditingReview(null);
-          }}
-          recipeId={editingReview.recipeId}
-          recipeName={editingReview.recipeName || "Recipe"}
-          userExistingReview={editingReview}
-          onReviewSuccess={handleReviewSuccess}
-        />
       )}
     </div>
   );
