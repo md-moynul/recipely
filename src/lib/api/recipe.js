@@ -36,7 +36,8 @@ export const getAllReviewsAdmin = async () => {
     const token = await getServerToken();
     return await protectedFetch('/api/admin/reviews', token);
 }
-export const getMyReviews = async () => {
+export const getMyReviews = async (authorId) => {
     const token = await getServerToken();
-    return await protectedFetch('/api/my-reviews', token);
+    const query = authorId ? `?authorId=${authorId}` : '';
+    return await protectedFetch(`/api/my-reviews${query}`, token);
 }

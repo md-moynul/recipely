@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getServerSession } from "@/lib/core/session";
 import { getMyReviews } from "@/lib/api/recipe";
 import MyReviewsTable from "./MyReviewsTable";
 
@@ -8,7 +9,8 @@ export const metadata = {
 };
 
 const MyReviewsPage = async () => {
-  const result = await getMyReviews();
+  const user = await getServerSession();
+  const result = await getMyReviews(user?.id);
   const reviews = Array.isArray(result) ? result : result?.reviews ?? [];
 
   return (
