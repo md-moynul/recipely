@@ -2,6 +2,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
 import Footer from "@/components/shared/Footer";
+import AIChatBot from "@/components/shared/AIChatBot";
 import { ToastContainer } from "react-toastify";
 import { Providers } from "@/components/provider/Providers";
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
           <ToastContainer />
+          <AIChatBot />
           <Footer />
         </Providers>
       </body>
