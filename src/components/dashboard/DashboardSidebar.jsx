@@ -47,7 +47,7 @@ export default function DashboardSidebar({ user ,isPremium }) {
     },
     {
       icon: Comment,
-      label: "My Reviews",
+      label: "Recipe Reviews",
       href: "/dashboard/user/my-reviews",
     },
     {
