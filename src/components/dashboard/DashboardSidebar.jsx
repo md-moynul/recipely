@@ -12,6 +12,7 @@ import {
   Person,
   Plus,
   Flag,
+  Comment,
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
 
@@ -45,6 +46,11 @@ export default function DashboardSidebar({ user ,isPremium }) {
       href: "/dashboard/user/purchased",
     },
     {
+      icon: Comment,
+      label: "My Reviews",
+      href: "/dashboard/user/my-reviews",
+    },
+    {
       icon: Person,
       label: "Profile",
       href: "/dashboard/profile",
@@ -67,6 +73,11 @@ export default function DashboardSidebar({ user ,isPremium }) {
       icon: Book,
       label: "Manage Recipes",
       href: "/dashboard/admin/manage-recipes",
+    },
+    {
+      icon: Comment,
+      label: "Manage Reviews",
+      href: "/dashboard/admin/manage-reviews",
     },
     {
       icon: Flag,
