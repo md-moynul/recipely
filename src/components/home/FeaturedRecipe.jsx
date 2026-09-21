@@ -67,7 +67,8 @@ function FeaturedCard({ recipe }) {
 }
 
 export default function FeaturedRecipesSection({ recipes }) {
-  if (!recipes || recipes.length === 0) return null;
+  const recipeList = (Array.isArray(recipes) ? recipes : recipes?.recipes || []).slice(0, 8);
+  if (!recipeList || recipeList.length === 0) return null;
 
   return (
     <section className="px-4 py-16">
@@ -102,7 +103,7 @@ export default function FeaturedRecipesSection({ recipes }) {
           variants={container}
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
         >
-          {recipes.map((recipe) => (
+          {recipeList.map((recipe) => (
             <FeaturedCard key={recipe._id ?? recipe.id} recipe={recipe} />
           ))}
         </motion.div>
