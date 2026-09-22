@@ -14,10 +14,13 @@ import {
   Flag,
   Comment,
 } from "@gravity-ui/icons";
+import { CartIcon } from "@/components/shared/CartIcon";
+import { useCart } from "@/context/CartContext";
 import { Button, Drawer } from "@heroui/react";
 
 export default function DashboardSidebar({ user ,isPremium }) {
   const pathname = usePathname();
+  const { totalCount } = useCart();
   
   const userNavItems = [
     {
@@ -39,6 +42,12 @@ export default function DashboardSidebar({ user ,isPremium }) {
       icon: Bookmark,
       label: "My Favorites",
       href: "/dashboard/user/favorites",
+    },
+    {
+      icon: CartIcon,
+      label: "Shopping Cart",
+      href: "/dashboard/user/cart",
+      badge: totalCount,
     },
     {
       icon: CreditCard,
@@ -125,9 +134,16 @@ export default function DashboardSidebar({ user ,isPremium }) {
                 <span>{item.label}</span>
               </div>
 
-              {isActive && (
-                <div className="absolute right-0 top-1/4 h-1/2 w-0.5 bg-[#E85D3D] rounded-l" />
-              )}
+              <div className="flex items-center gap-2">
+                {item.badge > 0 && (
+                  <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#E85D3D] px-1.5 text-[11px] font-bold text-white shadow-2xs">
+                    {item.badge}
+                  </span>
+                )}
+                {isActive && (
+                  <div className="h-4 w-1 bg-[#E85D3D] rounded-full" />
+                )}
+              </div>
             </button>
           </Link>
         );
