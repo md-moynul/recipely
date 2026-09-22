@@ -52,18 +52,16 @@ export default async function RecipeDetailsPage({ params }) {
         {/* Content Layout Body */}
         <div className="p-6 sm:p-10">
           {/* Header Action Row */}
-          <div className="flex flex-col gap-4 border-b border-[#EAE0D3] pb-6 sm:flex-row sm:items-start sm:justify-between dark:border-[#3A332A]">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-[#E85D3D]">
-                {recipe.cuisineType} • {recipe.category}
-              </span>
-              <h1 className="mt-1 text-2xl font-bold text-[#2B2420] sm:text-3xl dark:text-[#F4EDE4]">
-                {recipe.recipeName}
-              </h1>
-            </div>
+          <div className="border-b border-[#EAE0D3] pb-6 dark:border-[#3A332A]">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#E85D3D]">
+              {recipe.cuisineType} • {recipe.category}
+            </span>
+            <h1 className="mt-1.5 text-2xl font-bold text-[#2B2420] sm:text-3xl lg:text-[2rem] leading-snug dark:text-[#F4EDE4]">
+              {recipe.recipeName}
+            </h1>
 
             {/* Integrated Action Cluster */}
-            <div className="shrink-0">
+            <div className="mt-5 flex flex-wrap items-center justify-start gap-2.5">
               <RecipeActions
                 recipeId={recipe._id}
                 recipeName={recipe.recipeName}
