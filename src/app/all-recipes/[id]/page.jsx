@@ -67,6 +67,10 @@ export default async function RecipeDetailsPage({ params }) {
               <RecipeActions
                 recipeId={recipe._id}
                 recipeName={recipe.recipeName}
+                recipeImage={recipe.recipeImage}
+                category={recipe.category}
+                cuisineType={recipe.cuisineType}
+                preparationTime={recipe.preparationTime}
                 initialLikes={recipe.likes}
                 likedBy={recipe.likedBy || []}
                 userId={user?.id}
